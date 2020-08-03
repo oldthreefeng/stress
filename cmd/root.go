@@ -30,13 +30,9 @@ var cfgFile string
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "stress",
-	Short: "A brief description of your application",
-	Long: `A longer description that spans multiple lines and likely contains
-examples and usage of using your application. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Short: "stress is a test cli for http and websocket stress written by golang",
+	Long: `stress is a test cli for http and websocket stress written by golang, 
+go 实现的压测工具，每个用户用一个协程的方式模拟，最大限度的利用 CPU 资源`,
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
 	//	Run: func(cmd *cobra.Command, args []string) { },
@@ -58,12 +54,12 @@ func init() {
 	// Cobra supports persistent flags, which, if defined here,
 	// will be global for your application.
 
-	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.stress.yaml)")
+	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file for stress (default is $HOME/.stress.yaml)")
 	rootCmd.PersistentFlags().Uint64VarP(&pkg.Concurrency, "concurrency", "c" ,1, "并发数")
 	rootCmd.PersistentFlags().Uint64VarP(&pkg.Number, "number", "n" ,1, "单协程的请求数")
-	rootCmd.PersistentFlags().StringVarP(&pkg.RequestUrl, "requestUrl", "u", "", "config file (default is $HOME/.stress.yaml)")
+	rootCmd.PersistentFlags().StringVarP(&pkg.RequestUrl, "requestUrl", "u", "", "curl文件路径")
 
-	rootCmd.PersistentFlags().StringVarP(&pkg.Verify, "verify", "v","" , "config file ")
+	rootCmd.PersistentFlags().StringVarP(&pkg.VerifyStr, "verify", "v","" , " verify 验证方法 在server/verify中 http 支持:statusCode、json webSocket支持:json")
 	rootCmd.PersistentFlags().StringVarP(&pkg.Body, "data", "","" , "http post data")
 	rootCmd.PersistentFlags().StringSliceVarP(&pkg.Header, "header", "H",[]string{}, "http post data")
 	rootCmd.PersistentFlags().BoolVarP(&pkg.Debug, "debug", "d",false, "debug 模式")
