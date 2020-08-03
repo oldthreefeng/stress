@@ -50,5 +50,5 @@ var (
 	Version    = "latest"
 	Build      = ""
 	BuildTime  = ""
-	VersionStr = fmt.Sprintf("sshgo version %v, build %v %v, Build Time : %v", Version, Build, runtime.Version(), BuildTime)
+	VersionStr = fmt.Sprintf("stress version: %v, build git hash: %v ,Go version: %v, Build Time : %v", Version, Build, runtime.Version(), BuildTime)
 )
