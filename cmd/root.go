@@ -17,10 +17,11 @@ package cmd
 
 import (
 	"fmt"
+	"github.com/oldthreefeng/stress/pkg"
 	"github.com/spf13/cobra"
 	"os"
 
-	homedir "github.com/mitchellh/go-homedir"
+	"github.com/mitchellh/go-homedir"
 	"github.com/spf13/viper"
 )
 
@@ -58,6 +59,14 @@ func init() {
 	// will be global for your application.
 
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.stress.yaml)")
+	rootCmd.PersistentFlags().Uint64VarP(&pkg.Concurrency, "concurrency", "c" ,1, "并发数")
+	rootCmd.PersistentFlags().Uint64VarP(&pkg.Number, "number", "n" ,1, "单协程的请求数")
+	rootCmd.PersistentFlags().StringVarP(&pkg.RequestUrl, "requestUrl", "u", "", "config file (default is $HOME/.stress.yaml)")
+
+	rootCmd.PersistentFlags().StringVarP(&pkg.Verify, "verify", "v","" , "config file ")
+	rootCmd.PersistentFlags().StringVarP(&pkg.Body, "data", "","" , "http post data")
+	rootCmd.PersistentFlags().StringSliceVarP(&pkg.Header, "header", "H",[]string{}, "http post data")
+	rootCmd.PersistentFlags().BoolVarP(&pkg.Debug, "debug", "d",false, "debug 模式")
 
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.

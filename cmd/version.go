@@ -17,6 +17,7 @@ package cmd
 
 import (
 	"fmt"
+	"runtime"
 
 	"github.com/spf13/cobra"
 )
@@ -24,15 +25,10 @@ import (
 // versionCmd represents the version command
 var versionCmd = &cobra.Command{
 	Use:   "version",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Short: "stress version",
+	Long: `stress build INFO`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("version called")
+		fmt.Println(VersionStr)
 	},
 }
 
@@ -49,3 +45,10 @@ func init() {
 	// is called directly, e.g.:
 	// versionCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
+
+var (
+	Version    = "latest"
+	Build      = ""
+	BuildTime  = ""
+	VersionStr = fmt.Sprintf("sshgo version %v, build %v %v, Build Time : %v", Version, Build, runtime.Version(), BuildTime)
+)

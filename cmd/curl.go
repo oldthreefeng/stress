@@ -17,20 +17,29 @@ package cmd
 
 import (
 	"fmt"
+	"github.com/oldthreefeng/stress/pkg"
 
 	"github.com/spf13/cobra"
+)
+
+var (
+	curlExample = `
+	
+	# stress curl file to test 
+	stress curl -f /tmp/curl.txt
+
+	# stress curl file read from stdin 
+ 	cat a.txt | stress curl -f -
+
+`
 )
 
 // curlCmd represents the curl command
 var curlCmd = &cobra.Command{
 	Use:   "curl",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Short: "stress curl -f file ",
+	Long: `stress curl is usr curl file to build stress http testing`,
+	Example: curlExample,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("curl called")
 	},
@@ -38,7 +47,7 @@ to quickly create a Cobra application.`,
 
 func init() {
 	rootCmd.AddCommand(curlCmd)
-
+	rootCmd.PersistentFlags().StringVarP(&pkg.Path, "path", "f","" , "read curl file to build test")
 	// Here you will define your flags and configuration settings.
 
 	// Cobra supports Persistent Flags which will work for this command

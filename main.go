@@ -15,7 +15,7 @@ limitations under the License.
 */
 package main
 
-import "github.com/oldtreefeng/stress/cmd"
+import "github.com/oldthreefeng/stress/cmd"
 
 func main() {
 	cmd.Execute()
