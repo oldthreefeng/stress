@@ -19,6 +19,7 @@ import (
 	"fmt"
 	"github.com/oldthreefeng/stress/pkg"
 	"github.com/spf13/cobra"
+	"log"
 	"os"
 
 	"github.com/mitchellh/go-homedir"
@@ -35,7 +36,9 @@ var rootCmd = &cobra.Command{
 go 实现的压测工具，每个用户用一个协程的方式模拟，最大限度的利用 CPU 资源`,
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
-	//	Run: func(cmd *cobra.Command, args []string) { },
+	Run: func(cmd *cobra.Command, args []string) {
+		Start()
+	},
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
@@ -93,4 +96,15 @@ func initConfig() {
 	if err := viper.ReadInConfig(); err == nil {
 		fmt.Println("Using config file:", viper.ConfigFileUsed())
 	}
+}
+
+func Start()  {
+	request, err := pkg.NewRequest(pkg.RequestUrl,pkg.VerifyStr,0,pkg.Debug,pkg.Header,pkg.Body)
+	if err != nil {
+		log.Fatal()
+		return
+	}
+	fmt.Printf("\n 开始启动  并发数:%d 请求数:%d 请求参数: \n", pkg.Concurrency, pkg.Number)
+	request.Print()
+	Dispose(pkg.Concurrency,pkg.Number,request)
 }

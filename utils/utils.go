@@ -1,11 +1,15 @@
 package utils
 
 import (
+	"bufio"
 	"encoding/json"
 	"errors"
+	"fmt"
+	"io"
 	"io/ioutil"
 	"os"
 	"strings"
+	"time"
 )
 
 type Curl struct {
@@ -48,6 +52,43 @@ func ParseTheFile(path string) (curl *Curl, err error) {
 		return
 	}
 	return NewCurl(string(dataBytes)), nil
+}
+
+
+func ParseTheFileC(path string) (curls []*Curl, err error) {
+
+	if path == "" {
+		err = errors.New("路径不能为空")
+
+		return
+	}
+	file, err := os.Open(path)
+	if err != nil {
+		err = errors.New("打开文件失败:" + err.Error())
+
+		return
+	}
+
+	defer func() {
+		file.Close()
+	}()
+
+	//dataBytes, err := ioutil.ReadAll(file)
+	br := bufio.NewReader(file)
+	for {
+		a,_,c := br.ReadLine()
+		if c == io.EOF {
+			break
+		}
+		curl := NewCurl(string(a))
+		curls = append(curls, curl)
+	}
+
+	// for key, value := range curl.Data {
+	// 	fmt.Println("key:", key, "value:", value)
+	// }
+
+	return
 }
 
 
@@ -198,6 +239,31 @@ func (c *Curl) GetBody() (body string) {
 
 	// body = strings.NewReader(value[0])
 	body = value[0]
+
+	return
+}
+
+func (c *Curl) GetUrl() (url string) {
+
+	keys := []string{"curl", "--url"}
+	value := c.getDataValue(keys)
+	if len(value) <= 0 {
+
+		return
+	}
+
+	url = value[0]
+
+	return
+}
+
+
+func DiffNano(startTime time.Time) (diff int64) {
+
+	startTimeStamp := startTime.UnixNano()
+	endTimeStamp := time.Now().UnixNano()
+
+	diff = endTimeStamp - startTimeStamp
 
 	return
 }
