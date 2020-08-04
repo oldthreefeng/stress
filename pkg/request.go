@@ -18,6 +18,9 @@ const (
 
 	FormTypeHttp      = "http"
 	FormTypeWebSocket = "webSocket"
+	DefaultMethod 	  = "GET"
+	DefaultVerifyCode = "statusCode"
+	DefaultTimeOut    = 30 * time.Second
 )
 
 var (
@@ -113,7 +116,7 @@ func (r *Request) GetVerifyWebSocket() VerifyWebSocket {
 func NewRequest(url string, verify string, timeout time.Duration, debug bool, reqHeaders []string, reqBody string) (request *Request, err error) {
 
 	var (
-		method  = "GET"
+		method  = DefaultMethod
 		headers = make(map[string]string)
 		body    string
 	)
@@ -153,7 +156,7 @@ func NewRequest(url string, verify string, timeout time.Duration, debug bool, re
 	case FormTypeHttp:
 		// verify
 		if verify == "" {
-			verify = "statusCode"
+			verify = DefaultVerifyCode
 		}
 
 		key := fmt.Sprintf("%s.%s", form, verify)
@@ -180,7 +183,7 @@ func NewRequest(url string, verify string, timeout time.Duration, debug bool, re
 	}
 
 	if timeout == 0 {
-		timeout = 30 * time.Second
+		timeout = DefaultTimeOut
 	}
 
 	request = &Request{
@@ -196,6 +199,18 @@ func NewRequest(url string, verify string, timeout time.Duration, debug bool, re
 
 	return
 
+}
+
+func NewDefaultRequest()  *Request {
+	return &Request{
+		Url: "http://www.baidu.com",
+		Form: FormTypeHttp,
+		Method: DefaultMethod,
+		Verify: DefaultVerifyCode,
+		Timeout: DefaultTimeOut,
+		Debug: Debug,
+		Body: "",
+	}
 }
 
 func getHeaderValue(v string, headers map[string]string) {

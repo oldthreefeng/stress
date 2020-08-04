@@ -1,11 +1,15 @@
 package utils
 
 import (
+	"bufio"
 	"encoding/json"
 	"errors"
+	"fmt"
+	"io"
 	"io/ioutil"
 	"os"
 	"strings"
+	"time"
 )
 
 type Curl struct {
@@ -23,8 +27,6 @@ func (c *Curl) getDataValue(k []string) []string {
 	}
 	return v
 }
-
-
 
 func ParseTheFile(path string) (curl *Curl, err error) {
 	if path == "" {
@@ -50,8 +52,47 @@ func ParseTheFile(path string) (curl *Curl, err error) {
 	return NewCurl(string(dataBytes)), nil
 }
 
+func ParseTheFileC(path string) (curls []*Curl, err error) {
 
-func NewCurl(data string) (curl  *Curl)  {
+	if path == "" {
+		err = errors.New("路径不能为空")
+
+		return
+	}
+	file, err := os.Open(path)
+	if err != nil {
+		err = errors.New("打开文件失败:" + err.Error())
+
+		return
+	}
+
+	defer func() {
+		file.Close()
+	}()
+
+	//dataBytes, err := ioutil.ReadAll(file)
+	br := bufio.NewReader(file)
+	for {
+		a, _, c := br.ReadLine()
+		if c == io.EOF {
+			break
+		}
+		curl := NewCurl(string(a))
+		curls = append(curls, curl)
+	}
+
+	// for key, value := range curl.Data {
+	// 	fmt.Println("key:", key, "value:", value)
+	// }
+
+	return
+}
+
+func NewCurl(data string) (curl *Curl) {
+	curl = &Curl{
+		Data: make(map[string][]string),
+	}
+
 	for len(data) > 0 {
 		if strings.HasPrefix(data, "curl") {
 			data = data[5:]
@@ -146,7 +187,6 @@ func (c *Curl) GetMethod() (method string) {
 	return
 }
 
-
 func (c *Curl) GetHeaders() (headers map[string]string) {
 	headers = make(map[string]string, 0)
 
@@ -200,4 +240,33 @@ func (c *Curl) GetBody() (body string) {
 	body = value[0]
 
 	return
+}
+
+func (c *Curl) GetUrl() (url string) {
+
+	keys := []string{"curl", "--url"}
+	value := c.getDataValue(keys)
+	if len(value) <= 0 {
+
+		return
+	}
+
+	url = value[0]
+
+	return
+}
+
+func DiffNano(startTime time.Time) (diff int64) {
+
+	startTimeStamp := startTime.UnixNano()
+	endTimeStamp := time.Now().UnixNano()
+
+	diff = endTimeStamp - startTimeStamp
+
+	return
+}
+
+func FileExist(path string) bool {
+	_, err := os.Stat(path)
+	return err == nil || os.IsExist(err)
 }

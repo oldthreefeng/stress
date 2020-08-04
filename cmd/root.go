@@ -19,6 +19,7 @@ import (
 	"fmt"
 	"github.com/oldthreefeng/stress/pkg"
 	"github.com/spf13/cobra"
+	"log"
 	"os"
 
 	"github.com/mitchellh/go-homedir"
@@ -35,7 +36,9 @@ var rootCmd = &cobra.Command{
 go 实现的压测工具，每个用户用一个协程的方式模拟，最大限度的利用 CPU 资源`,
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
-	//	Run: func(cmd *cobra.Command, args []string) { },
+	Run: func(cmd *cobra.Command, args []string) {
+		Start()
+	},
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
@@ -55,14 +58,14 @@ func init() {
 	// will be global for your application.
 
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file for stress (default is $HOME/.stress.yaml)")
-	rootCmd.PersistentFlags().Uint64VarP(&pkg.Concurrency, "concurrency", "c" ,1, "并发数")
-	rootCmd.PersistentFlags().Uint64VarP(&pkg.Number, "number", "n" ,1, "单协程的请求数")
+	rootCmd.PersistentFlags().Uint64VarP(&pkg.Concurrency, "concurrency", "c", 1, "并发数")
+	rootCmd.PersistentFlags().Uint64VarP(&pkg.Number, "number", "n", 1, "单协程的请求数")
 	rootCmd.PersistentFlags().StringVarP(&pkg.RequestUrl, "requestUrl", "u", "", "curl文件路径")
 
-	rootCmd.PersistentFlags().StringVarP(&pkg.VerifyStr, "verify", "v","" , " verify 验证方法 在server/verify中 http 支持:statusCode、json webSocket支持:json")
-	rootCmd.PersistentFlags().StringVarP(&pkg.Body, "data", "","" , "http post data")
-	rootCmd.PersistentFlags().StringSliceVarP(&pkg.Header, "header", "H",[]string{}, "http post data")
-	rootCmd.PersistentFlags().BoolVarP(&pkg.Debug, "debug", "d",false, "debug 模式")
+	rootCmd.PersistentFlags().StringVarP(&pkg.VerifyStr, "verify", "v", "", " verify 验证方法 在server/verify中 http 支持:statusCode、json webSocket支持:json")
+	rootCmd.PersistentFlags().StringVarP(&pkg.Body, "data", "", "", "http post data")
+	rootCmd.PersistentFlags().StringSliceVarP(&pkg.Header, "header", "H", []string{}, "http post data")
+	rootCmd.PersistentFlags().BoolVarP(&pkg.Debug, "debug", "d", false, "debug 模式")
 
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
@@ -93,4 +96,15 @@ func initConfig() {
 	if err := viper.ReadInConfig(); err == nil {
 		fmt.Println("Using config file:", viper.ConfigFileUsed())
 	}
+}
+
+func Start() {
+	request, err := pkg.NewRequest(pkg.RequestUrl, pkg.VerifyStr, 0, pkg.Debug, pkg.Header, pkg.Body)
+	if err != nil {
+		log.Fatal()
+		return
+	}
+	fmt.Printf("\n 开始启动  并发数:%d 请求数:%d 请求参数: \n", pkg.Concurrency, pkg.Number)
+	request.Print()
+	Dispose(pkg.Concurrency, pkg.Number, request)
 }

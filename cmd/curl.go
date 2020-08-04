@@ -16,8 +16,11 @@ limitations under the License.
 package cmd
 
 import (
+	"bytes"
 	"fmt"
 	"github.com/oldthreefeng/stress/pkg"
+	"io/ioutil"
+	"os"
 
 	"github.com/spf13/cobra"
 )
@@ -41,7 +44,14 @@ var curlCmd = &cobra.Command{
 	Long: `stress curl is usr curl file to build stress http testing`,
 	Example: curlExample,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("curl called")
+		if pkg.Path == "-" {
+			err := ReadStdin()
+			if err != nil {
+				fmt.Println("Read stdin err: ", err)
+				return
+			}
+		}
+		StartCurl()
 	},
 }
 
@@ -57,4 +67,26 @@ func init() {
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
 	// curlCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+}
+
+func StartCurl() {
+	request := pkg.NewDefaultRequest()
+	list := pkg.GetRequestListFromFile(pkg.Path)
+	for k, v := range list {
+		fmt.Printf("%d step", k)
+		v.Print()
+	}
+	fmt.Printf("\n 开始启动  并发数:%d 请求数:%d 请求参数: \n", pkg.Concurrency, pkg.Number)
+	Dispose(pkg.Concurrency, pkg.Number, request)
+}
+
+func ReadStdin() error {
+	buf := make([]byte, 10240)
+	_, err := os.Stdin.Read(buf)
+	if err != nil {
+		return err
+	}
+	textBuf := bytes.TrimRight(buf, "\x00")
+	pkg.Path = "/tmp/curl.tmp"
+	return ioutil.WriteFile(pkg.Path, textBuf, 06660)
 }
