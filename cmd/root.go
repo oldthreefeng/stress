@@ -32,16 +32,20 @@ var (
 	cfgFile string
 	rootExample = `	
 	# stress curl file to test 
-	stress -f /tmp/curl.txt
+	stress -f utils/curl.txt
 
 	# stress curl file read from stdin 
- 	cat a.txt | stress -f -
+ 	cat utils/curl.txt | stress -f -
 
 	# stress concurrency 10 & 10 times
-	stress -c 10 -n 10 -f  /tmp/curl.txt
+	stress -c 10 -n 10 -f  utils/curl.txt
 
 	# stress cli url
 	stress -c 10 -n 100 -u https://www.baidu.com
+	
+	# curl.txt example
+	cat utils/curl.txt
+curl 'https://www.baidu.com' -H 'User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:79.0) Gecko/20100101 Firefox/79.0' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8' -H 'Accept-Language: zh-CN,en-US;q=0.7,en;q=0.3' --compressed -H 'Connection: keep-alive' -H 'Upgrade-Insecure-Requests: 1' -H 'Cache-Control: max-age=0' -H 'TE: Trailers'
 `
 )
 
@@ -92,14 +96,10 @@ func init() {
 	rootCmd.PersistentFlags().StringVarP(&pkg.RequestUrl, "requestUrl", "u", "", "curl文件路径")
 	rootCmd.PersistentFlags().StringVarP(&pkg.Path, "path", "f","" , "read curl file to build test")
 
-	rootCmd.PersistentFlags().StringVarP(&pkg.VerifyStr, "verify", "v", "", " verify 验证方法 在server/verify中 http 支持:statusCode、json webSocket支持:json")
+	rootCmd.PersistentFlags().StringVarP(&pkg.VerifyStr, "verify", "v", pkg.DefaultVerifyCode, " verify 验证方法 在server/verify中 http 支持:statusCode、json webSocket支持:json")
 	rootCmd.PersistentFlags().StringVarP(&pkg.Body, "data", "", "", "http post data")
 	rootCmd.PersistentFlags().StringSliceVarP(&pkg.Header, "header", "H", []string{}, "http post data")
 	rootCmd.PersistentFlags().BoolVarP(&pkg.Debug, "debug", "d", false, "debug 模式")
-
-	// Cobra also supports local flags, which will only run
-	// when this action is called directly.
-	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
 
 // initConfig reads in config file and ENV variables if set.
@@ -144,21 +144,20 @@ func Start() {
 func StartCurl() {
 	request := pkg.NewDefaultRequest()
 	list := pkg.GetRequestListFromFile(pkg.Path)
+	fmt.Printf("\n 开始启动  并发数:%d 请求数:%d 请求参数: \n", pkg.Concurrency, pkg.Number)
 	for k, v := range list {
-		fmt.Printf("%d step", k)
+		fmt.Printf("%d step: \n", k)
 		v.Print()
 	}
-	fmt.Printf("\n 开始启动  并发数:%d 请求数:%d 请求参数: \n", pkg.Concurrency, pkg.Number)
 	Dispose(pkg.Concurrency, pkg.Number, request)
 }
 
 func ReadStdin() error {
-	buf := make([]byte, 10240)
-	_, err := os.Stdin.Read(buf)
+	var b bytes.Buffer
+	_, err := b.ReadFrom(os.Stdin)
 	if err != nil {
 		return err
 	}
-	textBuf := bytes.TrimRight(buf, "\x00")
 	pkg.Path = "/tmp/curl.tmp"
-	return ioutil.WriteFile(pkg.Path, textBuf, 0660)
+	return ioutil.WriteFile(pkg.Path, b.Bytes(), 0660)
 }

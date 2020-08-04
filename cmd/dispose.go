@@ -19,6 +19,7 @@ func init() {
 	// http
 	pkg.RegisterVerifyHttp("statusCode", verify.HttpStatusCode)
 	pkg.RegisterVerifyHttp("json", verify.HttpJson)
+	pkg.RegisterVerifyHttp("mallversionjson", verify.MallVersionJson)
 
 	// webSocket
 	pkg.RegisterVerifyWebSocket("json", verify.WebSocketJson)
