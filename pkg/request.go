@@ -155,10 +155,6 @@ func NewRequest(url string, verify string, timeout time.Duration, debug bool, re
 	switch form {
 	case FormTypeHttp:
 		// verify
-		if verify == "" {
-			verify = DefaultVerifyCode
-		}
-
 		key := fmt.Sprintf("%s.%s", form, verify)
 		_, ok = verifyMapHttp[key]
 		if !ok {
@@ -168,7 +164,7 @@ func NewRequest(url string, verify string, timeout time.Duration, debug bool, re
 		}
 	case FormTypeWebSocket:
 		// verify
-		if verify == "" {
+		if verify == DefaultVerifyCode {
 			verify = "json"
 		}
 
@@ -206,7 +202,7 @@ func NewDefaultRequest()  *Request {
 		Url: "http://www.baidu.com",
 		Form: FormTypeHttp,
 		Method: DefaultMethod,
-		Verify: DefaultVerifyCode,
+		Verify: VerifyStr,
 		Timeout: DefaultTimeOut,
 		Debug: Debug,
 		Body: "",

@@ -92,14 +92,10 @@ func init() {
 	rootCmd.PersistentFlags().StringVarP(&pkg.RequestUrl, "requestUrl", "u", "", "curl文件路径")
 	rootCmd.PersistentFlags().StringVarP(&pkg.Path, "path", "f","" , "read curl file to build test")
 
-	rootCmd.PersistentFlags().StringVarP(&pkg.VerifyStr, "verify", "v", "", " verify 验证方法 在server/verify中 http 支持:statusCode、json webSocket支持:json")
+	rootCmd.PersistentFlags().StringVarP(&pkg.VerifyStr, "verify", "v", pkg.DefaultVerifyCode, " verify 验证方法 在server/verify中 http 支持:statusCode、json webSocket支持:json")
 	rootCmd.PersistentFlags().StringVarP(&pkg.Body, "data", "", "", "http post data")
 	rootCmd.PersistentFlags().StringSliceVarP(&pkg.Header, "header", "H", []string{}, "http post data")
 	rootCmd.PersistentFlags().BoolVarP(&pkg.Debug, "debug", "d", false, "debug 模式")
-
-	// Cobra also supports local flags, which will only run
-	// when this action is called directly.
-	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
 
 // initConfig reads in config file and ENV variables if set.
@@ -144,21 +140,20 @@ func Start() {
 func StartCurl() {
 	request := pkg.NewDefaultRequest()
 	list := pkg.GetRequestListFromFile(pkg.Path)
+	fmt.Printf("\n 开始启动  并发数:%d 请求数:%d 请求参数: \n", pkg.Concurrency, pkg.Number)
 	for k, v := range list {
-		fmt.Printf("%d step", k)
+		fmt.Printf("%d step: \n", k)
 		v.Print()
 	}
-	fmt.Printf("\n 开始启动  并发数:%d 请求数:%d 请求参数: \n", pkg.Concurrency, pkg.Number)
 	Dispose(pkg.Concurrency, pkg.Number, request)
 }
 
 func ReadStdin() error {
-	buf := make([]byte, 10240)
-	_, err := os.Stdin.Read(buf)
+	var b bytes.Buffer
+	_, err := b.ReadFrom(os.Stdin)
 	if err != nil {
 		return err
 	}
-	textBuf := bytes.TrimRight(buf, "\x00")
 	pkg.Path = "/tmp/curl.tmp"
-	return ioutil.WriteFile(pkg.Path, textBuf, 0660)
+	return ioutil.WriteFile(pkg.Path, b.Bytes(), 0660)
 }

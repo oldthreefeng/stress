@@ -151,8 +151,8 @@ func GetRequestListFromFile(path string) (clients []*Request) {
 			Headers: v.GetHeaders(),
 			Body:    v.GetBody(),
 			Timeout: 30 * time.Second,
-			Verify:  "statusCode",
-			Debug:   false,
+			Verify:  VerifyStr,
+			Debug:   Debug,
 			Form:    FormTypeHttp,
 		})
 	}

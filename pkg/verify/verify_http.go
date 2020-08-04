@@ -95,3 +95,40 @@ func HttpJson(request *pkg.Request, response *http.Response) (code int, isSuccee
 	return
 }
 
+type MallVersion struct {
+	Status     int    `json:"status"`
+	Result     string `json:"result"`
+	TraceId    string `json:"traceId"`
+	DevMessage string `json:"devMessage"`
+	Message    string `json:"message"`
+	Url        string `json:"url"`
+}
+
+func MallVersionJson(request *pkg.Request, response *http.Response) (code int, isSucceed bool) {
+	defer response.Body.Close()
+	code = response.StatusCode
+	if code == http.StatusOK {
+		body, err := getZipData(response)
+		if err != nil {
+			code = pkg.ParseError
+			fmt.Printf("请求结果 ioutil.ReadAll err:%v", err)
+		} else {
+			responseJson := &MallVersion{}
+			err = json.Unmarshal(body, responseJson)
+			if err != nil {
+				code = pkg.ParseError
+				fmt.Printf("请求结果 json.Unmarshal err:%v", err)
+			} else {
+				code = responseJson.Status
+				// body 中code返回200为返回数据成功
+				if responseJson.Status == 200 {
+					isSucceed = true
+				}
+			}
+		}
+		if request.GetDebug() {
+			fmt.Printf("请求结果 httpCode:%d body:%s err:%v \n", response.StatusCode, string(body), err)
+		}
+	}
+	return
+}
