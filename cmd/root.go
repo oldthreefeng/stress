@@ -16,9 +16,11 @@ limitations under the License.
 package cmd
 
 import (
+	"bytes"
 	"fmt"
 	"github.com/oldthreefeng/stress/pkg"
 	"github.com/spf13/cobra"
+	"io/ioutil"
 	"log"
 	"os"
 
@@ -26,7 +28,22 @@ import (
 	"github.com/spf13/viper"
 )
 
-var cfgFile string
+var (
+	cfgFile string
+	rootExample = `	
+	# stress curl file to test 
+	stress -f /tmp/curl.txt
+
+	# stress curl file read from stdin 
+ 	cat a.txt | stress -f -
+
+	# stress concurrency 10 & 10 times
+	stress -c 10 -n 10 -f  /tmp/curl.txt
+
+	# stress cli url
+	stress -c 10 -n 100 -u https://www.baidu.com
+`
+)
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
@@ -36,8 +53,20 @@ var rootCmd = &cobra.Command{
 go 实现的压测工具，每个用户用一个协程的方式模拟，最大限度的利用 CPU 资源`,
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
+	Example: rootExample,
 	Run: func(cmd *cobra.Command, args []string) {
-		Start()
+		if pkg.Path != "" {
+			if pkg.Path == "-" {
+				err := ReadStdin()
+				if err != nil {
+					fmt.Println("Read stdin err: ", err)
+					return
+				}
+			}
+			StartCurl()
+		} else {
+			Start()
+		}
 	},
 }
 
@@ -61,6 +90,7 @@ func init() {
 	rootCmd.PersistentFlags().Uint64VarP(&pkg.Concurrency, "concurrency", "c", 1, "并发数")
 	rootCmd.PersistentFlags().Uint64VarP(&pkg.Number, "number", "n", 1, "单协程的请求数")
 	rootCmd.PersistentFlags().StringVarP(&pkg.RequestUrl, "requestUrl", "u", "", "curl文件路径")
+	rootCmd.PersistentFlags().StringVarP(&pkg.Path, "path", "f","" , "read curl file to build test")
 
 	rootCmd.PersistentFlags().StringVarP(&pkg.VerifyStr, "verify", "v", "", " verify 验证方法 在server/verify中 http 支持:statusCode、json webSocket支持:json")
 	rootCmd.PersistentFlags().StringVarP(&pkg.Body, "data", "", "", "http post data")
@@ -107,4 +137,28 @@ func Start() {
 	fmt.Printf("\n 开始启动  并发数:%d 请求数:%d 请求参数: \n", pkg.Concurrency, pkg.Number)
 	request.Print()
 	Dispose(pkg.Concurrency, pkg.Number, request)
+}
+
+
+
+func StartCurl() {
+	request := pkg.NewDefaultRequest()
+	list := pkg.GetRequestListFromFile(pkg.Path)
+	for k, v := range list {
+		fmt.Printf("%d step", k)
+		v.Print()
+	}
+	fmt.Printf("\n 开始启动  并发数:%d 请求数:%d 请求参数: \n", pkg.Concurrency, pkg.Number)
+	Dispose(pkg.Concurrency, pkg.Number, request)
+}
+
+func ReadStdin() error {
+	buf := make([]byte, 10240)
+	_, err := os.Stdin.Read(buf)
+	if err != nil {
+		return err
+	}
+	textBuf := bytes.TrimRight(buf, "\x00")
+	pkg.Path = "/tmp/curl.tmp"
+	return ioutil.WriteFile(pkg.Path, textBuf, 0660)
 }
