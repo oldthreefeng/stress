@@ -8,8 +8,6 @@ import (
 	"time"
 )
 
-
-
 // http go link
 func Http(chanId uint64, ch chan<- *RequestResults, totalNumber uint64, wg *sync.WaitGroup, request *Request) {
 
@@ -19,38 +17,33 @@ func Http(chanId uint64, ch chan<- *RequestResults, totalNumber uint64, wg *sync
 
 	// fmt.Printf("启动协程 编号:%05d \n", chanId)
 	for i := uint64(0); i < totalNumber; i++ {
+		// 如果curl路径存在， 则处理curl。
+		list := getRequestList(request, Path)
 
-		list := getRequestList(request)
-
-		isSucceed, errCode, requestTime := sendList(list)
-
-		requestResults := &RequestResults{
-			Time:      requestTime,
-			IsSucceed: isSucceed,
-			ErrCode:   errCode,
+		requestResults := sendList(list)
+		for _, v := range requestResults {
+			v.SetId(chanId, i*uint64(len(list)))
+			ch <- v
 		}
-
-		requestResults.SetId(chanId, i)
-
-		ch <- requestResults
 	}
 
 	return
 }
 
-
-
 // 多个接口分步压测
-func sendList(requestList []*Request) (isSucceed bool, errCode int, requestTime uint64) {
-
-	errCode = HttpOk
+func sendList(requestList []*Request) (requestResults []*RequestResults) {
+	var (
+		requestTime uint64
+	)
 	for _, request := range requestList {
 		succeed, code, u := send(request)
-		isSucceed = succeed
-		errCode = code
-		requestTime = requestTime + u
+		result := &RequestResults{
+			Time:      requestTime + u,
+			ErrCode:   code,
+			IsSucceed: succeed,
+		}
+		requestResults = append(requestResults, result)
 		if succeed == false {
-
 			break
 		}
 	}
@@ -80,7 +73,6 @@ func send(request *Request) (bool, int, uint64) {
 	return isSucceed, errCode, requestTime
 }
 
-
 // 接口加权压测
 type ReqListWeigh struct {
 	list       []Req
@@ -89,7 +81,7 @@ type ReqListWeigh struct {
 
 type Req struct {
 	req     *Request // 请求信息
-	weights uint32         // 权重，数字越大访问频率越高
+	weights uint32   // 权重，数字越大访问频率越高
 }
 
 func (r *ReqListWeigh) setWeighCount() {
@@ -130,12 +122,11 @@ func getRequest(request *Request) *Request {
 	return nil
 }
 
+func getRequestList(request *Request, path string) (clients []*Request) {
 
-func getRequestList(request *Request) (clients []*Request){
+	clients = GetRequestListFromFile(path)
 
-	clients = getRequestListFromFile()
-
-	if clients == nil || len(clients) <= 0{
+	if clients == nil || len(clients) <= 0 {
 
 		return []*Request{request}
 	}
@@ -144,21 +135,25 @@ func getRequestList(request *Request) (clients []*Request){
 }
 
 // 文件路径为空， 则返回 nil
-func getRequestListFromFile() (clients []*Request) {
+func GetRequestListFromFile(path string) (clients []*Request) {
 	clients = make([]*Request, 0)
-	curls, err := utils.ParseTheFileC(Path)
+	if path == "" {
+		return
+	}
+	curls, err := utils.ParseTheFileC(path)
 	if err != nil {
 		return
 	}
-	for _, v  := range  curls {
+	for _, v := range curls {
 		clients = append(clients, &Request{
-			Url: v.GetUrl(),
-			Method: v.GetMethod(),
+			Url:     v.GetUrl(),
+			Method:  v.GetMethod(),
 			Headers: v.GetHeaders(),
-			Body: v.GetBody(),
-			Timeout: 30 *time.Second,
-			Verify: "statusCode",
-			Debug: false,
+			Body:    v.GetBody(),
+			Timeout: 30 * time.Second,
+			Verify:  "statusCode",
+			Debug:   false,
+			Form:    FormTypeHttp,
 		})
 	}
 	return

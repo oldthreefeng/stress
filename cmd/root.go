@@ -58,14 +58,14 @@ func init() {
 	// will be global for your application.
 
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file for stress (default is $HOME/.stress.yaml)")
-	rootCmd.PersistentFlags().Uint64VarP(&pkg.Concurrency, "concurrency", "c" ,1, "并发数")
-	rootCmd.PersistentFlags().Uint64VarP(&pkg.Number, "number", "n" ,1, "单协程的请求数")
+	rootCmd.PersistentFlags().Uint64VarP(&pkg.Concurrency, "concurrency", "c", 1, "并发数")
+	rootCmd.PersistentFlags().Uint64VarP(&pkg.Number, "number", "n", 1, "单协程的请求数")
 	rootCmd.PersistentFlags().StringVarP(&pkg.RequestUrl, "requestUrl", "u", "", "curl文件路径")
 
-	rootCmd.PersistentFlags().StringVarP(&pkg.VerifyStr, "verify", "v","" , " verify 验证方法 在server/verify中 http 支持:statusCode、json webSocket支持:json")
-	rootCmd.PersistentFlags().StringVarP(&pkg.Body, "data", "","" , "http post data")
-	rootCmd.PersistentFlags().StringSliceVarP(&pkg.Header, "header", "H",[]string{}, "http post data")
-	rootCmd.PersistentFlags().BoolVarP(&pkg.Debug, "debug", "d",false, "debug 模式")
+	rootCmd.PersistentFlags().StringVarP(&pkg.VerifyStr, "verify", "v", "", " verify 验证方法 在server/verify中 http 支持:statusCode、json webSocket支持:json")
+	rootCmd.PersistentFlags().StringVarP(&pkg.Body, "data", "", "", "http post data")
+	rootCmd.PersistentFlags().StringSliceVarP(&pkg.Header, "header", "H", []string{}, "http post data")
+	rootCmd.PersistentFlags().BoolVarP(&pkg.Debug, "debug", "d", false, "debug 模式")
 
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
@@ -98,13 +98,13 @@ func initConfig() {
 	}
 }
 
-func Start()  {
-	request, err := pkg.NewRequest(pkg.RequestUrl,pkg.VerifyStr,0,pkg.Debug,pkg.Header,pkg.Body)
+func Start() {
+	request, err := pkg.NewRequest(pkg.RequestUrl, pkg.VerifyStr, 0, pkg.Debug, pkg.Header, pkg.Body)
 	if err != nil {
 		log.Fatal()
 		return
 	}
 	fmt.Printf("\n 开始启动  并发数:%d 请求数:%d 请求参数: \n", pkg.Concurrency, pkg.Number)
 	request.Print()
-	Dispose(pkg.Concurrency,pkg.Number,request)
+	Dispose(pkg.Concurrency, pkg.Number, request)
 }

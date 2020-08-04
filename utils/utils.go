@@ -28,8 +28,6 @@ func (c *Curl) getDataValue(k []string) []string {
 	return v
 }
 
-
-
 func ParseTheFile(path string) (curl *Curl, err error) {
 	if path == "" {
 		err = errors.New("路径不能为空")
@@ -54,7 +52,6 @@ func ParseTheFile(path string) (curl *Curl, err error) {
 	return NewCurl(string(dataBytes)), nil
 }
 
-
 func ParseTheFileC(path string) (curls []*Curl, err error) {
 
 	if path == "" {
@@ -76,7 +73,7 @@ func ParseTheFileC(path string) (curls []*Curl, err error) {
 	//dataBytes, err := ioutil.ReadAll(file)
 	br := bufio.NewReader(file)
 	for {
-		a,_,c := br.ReadLine()
+		a, _, c := br.ReadLine()
 		if c == io.EOF {
 			break
 		}
@@ -91,8 +88,11 @@ func ParseTheFileC(path string) (curls []*Curl, err error) {
 	return
 }
 
+func NewCurl(data string) (curl *Curl) {
+	curl = &Curl{
+		Data: make(map[string][]string),
+	}
 
-func NewCurl(data string) (curl  *Curl)  {
 	for len(data) > 0 {
 		if strings.HasPrefix(data, "curl") {
 			data = data[5:]
@@ -187,7 +187,6 @@ func (c *Curl) GetMethod() (method string) {
 	return
 }
 
-
 func (c *Curl) GetHeaders() (headers map[string]string) {
 	headers = make(map[string]string, 0)
 
@@ -256,7 +255,6 @@ func (c *Curl) GetUrl() (url string) {
 
 	return
 }
-
 
 func DiffNano(startTime time.Time) (diff int64) {
 

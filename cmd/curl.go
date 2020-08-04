@@ -41,7 +41,7 @@ var curlCmd = &cobra.Command{
 	Long: `stress curl is usr curl file to build stress http testing`,
 	Example: curlExample,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("curl called")
+		StartCurl()
 	},
 }
 
@@ -57,4 +57,15 @@ func init() {
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
 	// curlCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+}
+
+func StartCurl() {
+	request := pkg.NewDefaultRequest()
+	list := pkg.GetRequestListFromFile(pkg.Path)
+	for k, v := range list {
+		fmt.Printf("%d step", k)
+		v.Print()
+	}
+	fmt.Printf("\n 开始启动  并发数:%d 请求数:%d 请求参数: \n", pkg.Concurrency, pkg.Number)
+	Dispose(pkg.Concurrency, pkg.Number, request)
 }
