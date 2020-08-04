@@ -265,3 +265,8 @@ func DiffNano(startTime time.Time) (diff int64) {
 
 	return
 }
+
+func FileExist(path string) bool {
+	_, err := os.Stat(path)
+	return err == nil || os.IsExist(err)
+}
