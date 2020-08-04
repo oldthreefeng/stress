@@ -32,16 +32,20 @@ var (
 	cfgFile string
 	rootExample = `	
 	# stress curl file to test 
-	stress -f /tmp/curl.txt
+	stress -f utils/curl.txt
 
 	# stress curl file read from stdin 
- 	cat a.txt | stress -f -
+ 	cat utils/curl.txt | stress -f -
 
 	# stress concurrency 10 & 10 times
-	stress -c 10 -n 10 -f  /tmp/curl.txt
+	stress -c 10 -n 10 -f  utils/curl.txt
 
 	# stress cli url
 	stress -c 10 -n 100 -u https://www.baidu.com
+	
+	# curl.txt example
+	cat utils/curl.txt
+curl 'https://www.baidu.com' -H 'User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:79.0) Gecko/20100101 Firefox/79.0' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8' -H 'Accept-Language: zh-CN,en-US;q=0.7,en;q=0.3' --compressed -H 'Connection: keep-alive' -H 'Upgrade-Insecure-Requests: 1' -H 'Cache-Control: max-age=0' -H 'TE: Trailers'
 `
 )
 
