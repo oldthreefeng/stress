@@ -17,8 +17,6 @@ package cmd
 
 import (
 	"fmt"
-	"runtime"
-
 	"github.com/spf13/cobra"
 )
 
@@ -50,5 +48,6 @@ var (
 	Version    = "latest"
 	Build      = ""
 	BuildTime  = ""
-	VersionStr = fmt.Sprintf("stress version: %v, build git hash: %v ,Go version: %v, Build Time : %v", Version, Build, runtime.Version(), BuildTime)
+	GoVersion  = ""
+	VersionStr = fmt.Sprintf("stress version: %v, build git hash: %v ,%v, Build Time : %v", Version, Build, GoVersion, BuildTime)
 )
