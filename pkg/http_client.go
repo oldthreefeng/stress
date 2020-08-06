@@ -1,4 +1,4 @@
-package client
+package pkg
 
 import (
 	"crypto/tls"
@@ -28,6 +28,11 @@ func HttpRequest(method, url string, body io.Reader, headers map[string]string, 
 	}
 
 	req, err := http.NewRequest(method, url, body)
+
+	// 使用 --compressed。 则使用gzip压缩算法去请求。
+	if Compressed {
+		req.Header.Add("Accept-Encoding", "gzip")
+	}
 	if err != nil {
 
 		return

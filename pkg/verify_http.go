@@ -1,10 +1,9 @@
-package verify
+package pkg
 
 import (
 	"compress/gzip"
 	"encoding/json"
 	"fmt"
-	"github.com/oldthreefeng/stress/pkg"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -29,7 +28,7 @@ func getZipData(response *http.Response) (body []byte, err error) {
 }
 
 // 通过Http状态码判断是否请求成功
-func HttpStatusCode(request *pkg.Request, response *http.Response) (code int, isSucceed bool) {
+func HttpStatusCode(request *Request, response *http.Response) (code int, isSucceed bool) {
 
 	defer response.Body.Close()
 	code = response.StatusCode
@@ -59,7 +58,7 @@ type ResponseJson struct {
 // 通过返回的Body 判断
 // 返回示例: {"code":200,"msg":"Success","data":{}}
 // code 默认将http code作为返回码，http code 为200时 取body中的返回code
-func HttpJson(request *pkg.Request, response *http.Response) (code int, isSucceed bool) {
+func HttpJson(request *Request, response *http.Response) (code int, isSucceed bool) {
 
 	defer response.Body.Close()
 	code = response.StatusCode
@@ -67,13 +66,13 @@ func HttpJson(request *pkg.Request, response *http.Response) (code int, isSuccee
 
 		body, err := getZipData(response)
 		if err != nil {
-			code = pkg.ParseError
+			code = ParseError
 			fmt.Printf("请求结果 ioutil.ReadAll err:%v", err)
 		} else {
 			responseJson := &ResponseJson{}
 			err = json.Unmarshal(body, responseJson)
 			if err != nil {
-				code = pkg.ParseError
+				code = ParseError
 				fmt.Printf("请求结果 json.Unmarshal err:%v", err)
 			} else {
 
@@ -104,19 +103,19 @@ type MallVersion struct {
 	Url        string `json:"url"`
 }
 
-func MallVersionJson(request *pkg.Request, response *http.Response) (code int, isSucceed bool) {
+func MallVersionJson(request *Request, response *http.Response) (code int, isSucceed bool) {
 	defer response.Body.Close()
 	code = response.StatusCode
 	if code == http.StatusOK {
 		body, err := getZipData(response)
 		if err != nil {
-			code = pkg.ParseError
+			code = ParseError
 			fmt.Printf("请求结果 ioutil.ReadAll err:%v", err)
 		} else {
 			responseJson := &MallVersion{}
 			err = json.Unmarshal(body, responseJson)
 			if err != nil {
-				code = pkg.ParseError
+				code = ParseError
 				fmt.Printf("请求结果 json.Unmarshal err:%v", err)
 			} else {
 				code = responseJson.Status

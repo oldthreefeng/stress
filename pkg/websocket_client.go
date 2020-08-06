@@ -1,4 +1,4 @@
-package client
+package pkg
 
 import (
 	"errors"
@@ -12,14 +12,14 @@ const (
 	connRetry = 3 // 建立连接重试次数
 )
 
-type WebSocket struct {
+type WebSocketC struct {
 	conn    *websocket.Conn
 	UrlLink string
 	Url     *url.URL
 	IsSsl   bool
 }
 
-func NewWebSocket(urlLink string) (ws *WebSocket) {
+func NewWebSocket(urlLink string) (ws *WebSocketC) {
 	var (
 		isSsl bool
 	)
@@ -34,7 +34,7 @@ func NewWebSocket(urlLink string) (ws *WebSocket) {
 		panic(err)
 	}
 
-	ws = &WebSocket{
+	ws = &WebSocketC{
 		UrlLink: urlLink,
 		Url:     u,
 		IsSsl:   isSsl,
@@ -42,13 +42,13 @@ func NewWebSocket(urlLink string) (ws *WebSocket) {
 	return
 }
 
-func (w *WebSocket) getLink() (link string) {
+func (w *WebSocketC) getLink() (link string) {
 	link = w.UrlLink
 
 	return
 }
 
-func (w *WebSocket) getOrigin() (origin string) {
+func (w *WebSocketC) getOrigin() (origin string) {
 	origin = "http://"
 	if w.IsSsl {
 		origin = "https://"
@@ -60,7 +60,7 @@ func (w *WebSocket) getOrigin() (origin string) {
 }
 
 // 关闭
-func (w *WebSocket) Close() (err error) {
+func (w *WebSocketC) Close() (err error) {
 	if w == nil {
 
 		return
@@ -75,7 +75,7 @@ func (w *WebSocket) Close() (err error) {
 	return
 }
 
-func (w *WebSocket) GetConn() (err error) {
+func (w *WebSocketC) GetConn() (err error) {
 
 	var (
 		conn *websocket.Conn
@@ -102,7 +102,7 @@ func (w *WebSocket) GetConn() (err error) {
 }
 
 // 发送数据
-func (w *WebSocket) Write(body []byte) (err error) {
+func (w *WebSocketC) Write(body []byte) (err error) {
 	if w.conn == nil {
 		err = errors.New("未建立连接")
 
@@ -120,7 +120,7 @@ func (w *WebSocket) Write(body []byte) (err error) {
 }
 
 // 接收数据
-func (w *WebSocket) Read() (msg []byte, err error) {
+func (w *WebSocketC) Read() (msg []byte, err error) {
 	if w.conn == nil {
 		err = errors.New("未建立连接")
 

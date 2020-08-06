@@ -3,8 +3,6 @@ package cmd
 import (
 	"fmt"
 	"github.com/oldthreefeng/stress/pkg"
-	"github.com/oldthreefeng/stress/pkg/client"
-	"github.com/oldthreefeng/stress/pkg/verify"
 	"sync"
 	"time"
 )
@@ -17,12 +15,12 @@ const (
 func init() {
 
 	// http
-	pkg.RegisterVerifyHttp("statusCode", verify.HttpStatusCode)
-	pkg.RegisterVerifyHttp("json", verify.HttpJson)
-	pkg.RegisterVerifyHttp("mallversionjson", verify.MallVersionJson)
+	pkg.RegisterVerifyHttp("statusCode", pkg.HttpStatusCode)
+	pkg.RegisterVerifyHttp("json", pkg.HttpJson)
+	pkg.RegisterVerifyHttp("mallversionjson", pkg.MallVersionJson)
 
 	// webSocket
-	pkg.RegisterVerifyWebSocket("json", verify.WebSocketJson)
+	pkg.RegisterVerifyWebSocket("json", pkg.WebSocketJson)
 }
 
 // 处理函数
@@ -50,7 +48,7 @@ func Dispose(concurrency, totalNumber uint64, request *pkg.Request) {
 			switch connectionMode {
 			case 1:
 				// 连接以后再启动协程
-				ws := client.NewWebSocket(request.Url)
+				ws := pkg.NewWebSocket(request.Url)
 				err := ws.GetConn()
 				if err != nil {
 					fmt.Println("连接失败:", i, err)
@@ -63,7 +61,7 @@ func Dispose(concurrency, totalNumber uint64, request *pkg.Request) {
 				// 并发建立长链接
 				go func(i uint64) {
 					// 连接以后再启动协程
-					ws := client.NewWebSocket(request.Url)
+					ws := pkg.NewWebSocket(request.Url)
 					err := ws.GetConn()
 					if err != nil {
 						fmt.Println("连接失败:", i, err)

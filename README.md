@@ -221,7 +221,26 @@ $ ./stress -c 1 -n 1 -d -u 'https://page.aliyun.com/delivery/plan/list' \
   -H 'accept-language: zh-CN,zh;q=0.9' \
   -H 'cookie: aliyun_choice=CN; JSESSIONID=J8866281-CKCFJ4BUZ7GDO9V89YBW1-KJ3J5V9K-GYUW7; maliyun_temporary_console0=1AbLByOMHeZe3G41KYd5WWZvrM%2BGErkaLcWfBbgveKA9ifboArprPASvFUUfhwHtt44qsDwVqMk8Wkdr1F5LccYk2mPCZJiXb0q%2Bllj5u3SQGQurtyPqnG489y%2FkoA%2FEvOwsXJTvXTFQPK%2BGJD4FJg%3D%3D; cna=L3Q5F8cHDGgCAXL3r8fEZtdU; isg=BFNThsmSCcgX-sUcc5Jo2s2T4tF9COfKYi8g9wVwr3KphHMmjdh3GrHFvPTqJD_C; l=eBaceXLnQGBjstRJBOfwPurza77OSIRAguPzaNbMiT5POw1B5WAlWZbqyNY6C3GVh6lwR37EODnaBeYBc3K-nxvOu9eFfGMmn' \
   --data 'adPlanQueryParam=%7B%22adZone%22%3A%7B%22positionList%22%3A%5B%7B%22positionId%22%3A83%7D%5D%7D%2C%22requestId%22%3A%2217958651-f205-44c7-ad5d-f8af92a6217a%22%7D'
+  --compressed
+```
 
+like curl cmd , use `--data-raw` is the same with `--data`,  when use `--compressed`,  only support command line and `gzip`. 
+for curl file. the Header is in it. use `--compressed`, just  do this `req.Header.Add("Accept-Encoding", "gzip")`. 
+
+```shell
+$ ./stress -c 1 -n 1 -d -u 'https://page.aliyun.com/delivery/plan/list' \
+  -H 'authority: page.aliyun.com' \
+  -H 'accept: application/json, text/plain, */*' \
+  -H 'content-type: application/x-www-form-urlencoded' \
+  -H 'origin: https://cn.aliyun.com' \
+  -H 'sec-fetch-site: same-site' \
+  -H 'sec-fetch-mode: cors' \
+  -H 'sec-fetch-dest: empty' \
+  -H 'referer: https://cn.aliyun.com/' \
+  -H 'accept-language: zh-CN,zh;q=0.9' \
+  -H 'cookie: aliyun_choice=CN; JSESSIONID=J8866281-CKCFJ4BUZ7GDO9V89YBW1-KJ3J5V9K-GYUW7; maliyun_temporary_console0=1AbLByOMHeZe3G41KYd5WWZvrM%2BGErkaLcWfBbgveKA9ifboArprPASvFUUfhwHtt44qsDwVqMk8Wkdr1F5LccYk2mPCZJiXb0q%2Bllj5u3SQGQurtyPqnG489y%2FkoA%2FEvOwsXJTvXTFQPK%2BGJD4FJg%3D%3D; cna=L3Q5F8cHDGgCAXL3r8fEZtdU; isg=BFNThsmSCcgX-sUcc5Jo2s2T4tF9COfKYi8g9wVwr3KphHMmjdh3GrHFvPTqJD_C; l=eBaceXLnQGBjstRJBOfwPurza77OSIRAguPzaNbMiT5POw1B5WAlWZbqyNY6C3GVh6lwR37EODnaBeYBc3K-nxvOu9eFfGMmn' \
+  --data-raw 'adPlanQueryParam=%7B%22adZone%22%3A%7B%22positionList%22%3A%5B%7B%22positionId%22%3A83%7D%5D%7D%2C%22requestId%22%3A%2217958651-f205-44c7-ad5d-f8af92a6217a%22%7D'
+  --compressed
 ```
 
 - 项目结构
@@ -235,16 +254,14 @@ $ ./stress -c 1 -n 1 -d -u 'https://page.aliyun.com/delivery/plan/list' \
 ├── main.go
 ├── Makefile
 ├── pkg
-│   ├── client
-│   │   ├── http_client.go
-│   │   └── websocket_client.go
+│   ├── http_client.go
+│   ├── websocket_client.go
 │   ├── http.go
 │   ├── request.go
 │   ├── statistics.go
 │   ├── var.go
-│   ├── verify
-│   │   ├── verify_http.go
-│   │   └── verify_websocket.go
+│   ├── verify_http.go
+│   ├── verify_websocket.go
 │   └── websocket.go
 ├── README.md
 └── utils

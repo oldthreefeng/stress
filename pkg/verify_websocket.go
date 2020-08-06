@@ -1,9 +1,8 @@
-package verify
+package pkg
 
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/oldthreefeng/stress/pkg"
 )
 
 /***************************  返回值为json  ********************************/
@@ -22,17 +21,17 @@ type WebSocketResponseJson struct {
 // 通过返回的Body 判断
 // 返回示例: {"seq":"1566276523281-585638","cmd":"heartbeat","response":{"code":200,"codeMsg":"Success","data":null}}
 // code 取body中的返回code
-func WebSocketJson(request *pkg.Request, seq string, msg []byte) (code int, isSucceed bool) {
+func WebSocketJson(request *Request, seq string, msg []byte) (code int, isSucceed bool) {
 
 	responseJson := &WebSocketResponseJson{}
 	err := json.Unmarshal(msg, responseJson)
 	if err != nil {
-		code = pkg.ParseError
+		code = ParseError
 		fmt.Printf("请求结果 json.Unmarshal msg:%s err:%v", string(msg), err)
 	} else {
 
 		if seq != responseJson.Seq {
-			code = pkg.ParseError
+			code = ParseError
 			fmt.Println("请求和返回seq不一致 ~请求:", seq, responseJson.Seq, string(msg))
 		} else {
 			code = responseJson.Response.Code

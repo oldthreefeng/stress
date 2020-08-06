@@ -2,7 +2,6 @@ package pkg
 
 import (
 	"fmt"
-	"github.com/oldthreefeng/stress/pkg/client"
 	"github.com/oldthreefeng/stress/utils"
 	"sync"
 	"time"
@@ -23,7 +22,7 @@ func init() {
 }
 
 // web socket go link
-func WebSocket(chanId uint64, ch chan<- *RequestResults, totalNumber uint64, wg *sync.WaitGroup, request *Request, ws *client.WebSocket) {
+func WebSocket(chanId uint64, ch chan<- *RequestResults, totalNumber uint64, wg *sync.WaitGroup, request *Request, ws *WebSocketC) {
 
 	defer func() {
 		wg.Done()
@@ -70,7 +69,7 @@ end:
 }
 
 // 请求
-func webSocketRequest(chanId uint64, ch chan<- *RequestResults, i uint64, request *Request, ws *client.WebSocket) {
+func webSocketRequest(chanId uint64, ch chan<- *RequestResults, i uint64, request *Request, ws *WebSocketC) {
 
 	var (
 		startTime = time.Now()

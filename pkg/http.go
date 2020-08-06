@@ -1,7 +1,6 @@
 package pkg
 
 import (
-	"github.com/oldthreefeng/stress/pkg/client"
 	"github.com/oldthreefeng/stress/utils"
 	"math/rand"
 	"sync"
@@ -62,7 +61,7 @@ func send(request *Request) (bool, int, uint64) {
 	newRequest := getRequest(request)
 	// newRequest := request
 
-	resp, requestTime, err := client.HttpRequest(newRequest.Method, newRequest.Url, newRequest.GetBody(), newRequest.Headers, newRequest.Timeout)
+	resp, requestTime, err := HttpRequest(newRequest.Method, newRequest.Url, newRequest.GetBody(), newRequest.Headers, newRequest.Timeout)
 	// requestTime := uint64(utils.DiffNano(startTime))
 	if err != nil {
 		errCode = RequestErr // 请求错误
