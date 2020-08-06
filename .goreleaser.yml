@@ -12,7 +12,7 @@ builds:
   dir: .
   main: .
   ldflags:
-  - -s -w -X github.com/oldthreefeng/stress/cmd.version={{.Version}} -X github.com/oldthreefeng/stress/cmd.Build={{.Commit}} -X github.com/oldthreefeng/stress/cmd.BuildTime={{.Date}} -X main.builtBy=goreleaser
+  - -s -w -X github.com/oldthreefeng/stress/cmd.version={{.Version}} -X github.com/oldthreefeng/stress/cmd.Build={{.ShortCommit}} -X github.com/oldthreefeng/stress/cmd.BuildTime={{.Date}} -X main.builtBy=goreleaser
 archives:
 - replacements:
     darwin: Darwin
