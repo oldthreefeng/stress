@@ -18,13 +18,14 @@ package cmd
 import (
 	"fmt"
 	"github.com/spf13/cobra"
+	"runtime"
 )
 
 // versionCmd represents the version command
 var versionCmd = &cobra.Command{
 	Use:   "version",
 	Short: "stress version",
-	Long: `stress build INFO`,
+	Long:  `stress build INFO`,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println(VersionStr)
 	},
@@ -48,6 +49,6 @@ var (
 	Version    = "latest"
 	Build      = ""
 	BuildTime  = ""
-	GoVersion  = ""
-	VersionStr = fmt.Sprintf("stress version: %v, build git hash: %v ,%v, Build Time : %v", Version, Build, GoVersion, BuildTime)
+	BuildBy    = "louisehong"
+	VersionStr = fmt.Sprintf("stress version: %v, build git hash: %v ,\ngo version: %v ,Build Time : %v\nBuildBy: %v", Version, Build, runtime.Version(), BuildTime, BuildBy)
 )
