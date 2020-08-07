@@ -1,6 +1,6 @@
 # stress
 
-go 实现的压测工具，每个用户用一个协程的方式模拟，最大限度的利用 CPU 资源
+go 实现的压测工具，每个用户用一个协程的方式模拟，最大限度的利用 CPU 资源. [下载](https://github.com/oldthreefeng/stress/releases)
 
 ### 1.1 安装
 
@@ -41,6 +41,38 @@ $ sh build.sh v1.0.0
 # 运行 以linux为示例
 ./stress -c 1 -n 100 -u https://www.baidu.com/
 
+```
+
+or use in docker  ,高并发建议开启多docker。在性能差的机子上，运行效果不好。
+
+```shell
+$ docker pull louisehong/stress 
+docker run --rm louisehong/stress -c 10 -n 10 -u https://www.baidu.com/ 
+
+ 开始启动  并发数:10 请求数:10 请求参数: 
+request:
+ form:http 
+ url:https://www.baidu.com/ 
+ method:GET 
+ headers:map[] 
+ data: 
+ verify:statusCode 
+ timeout:30s 
+ debug:false 
+
+
+
+─────┬───────┬───────┬───────┬────────┬────────┬────────┬────────┬────────
+ 耗时│ 并发数│ 成功数│ 失败数│   qps  │最长耗时│最短耗时│平均耗时│ 错误码
+─────┼───────┼───────┼───────┼────────┼────────┼────────┼────────┼────────
+   1s│     10│     99│      0│  176.48│   82.88│   40.26│    5.67│200:99
+   2s│     10│    100│      0│  149.89│ 1061.94│   40.26│    6.67│200:100
+
+
+*************************  结果 stat  ****************************
+处理协程数量: 10
+请求总数（并发数*请求数 -c * -n）: 100 总请求时间: 1.557 秒 successNum: 100 failureNum: 0
+*************************  结果 end   ****************************
 ```
 
 - 压测结果展示
@@ -220,7 +252,7 @@ $ ./stress -c 1 -n 1 -d -u 'https://page.aliyun.com/delivery/plan/list' \
   -H 'referer: https://cn.aliyun.com/' \
   -H 'accept-language: zh-CN,zh;q=0.9' \
   -H 'cookie: aliyun_choice=CN; JSESSIONID=J8866281-CKCFJ4BUZ7GDO9V89YBW1-KJ3J5V9K-GYUW7; maliyun_temporary_console0=1AbLByOMHeZe3G41KYd5WWZvrM%2BGErkaLcWfBbgveKA9ifboArprPASvFUUfhwHtt44qsDwVqMk8Wkdr1F5LccYk2mPCZJiXb0q%2Bllj5u3SQGQurtyPqnG489y%2FkoA%2FEvOwsXJTvXTFQPK%2BGJD4FJg%3D%3D; cna=L3Q5F8cHDGgCAXL3r8fEZtdU; isg=BFNThsmSCcgX-sUcc5Jo2s2T4tF9COfKYi8g9wVwr3KphHMmjdh3GrHFvPTqJD_C; l=eBaceXLnQGBjstRJBOfwPurza77OSIRAguPzaNbMiT5POw1B5WAlWZbqyNY6C3GVh6lwR37EODnaBeYBc3K-nxvOu9eFfGMmn' \
-  --data 'adPlanQueryParam=%7B%22adZone%22%3A%7B%22positionList%22%3A%5B%7B%22positionId%22%3A83%7D%5D%7D%2C%22requestId%22%3A%2217958651-f205-44c7-ad5d-f8af92a6217a%22%7D'
+  --data 'adPlanQueryParam=%7B%22adZone%22%3A%7B%22positionList%22%3A%5B%7B%22positionId%22%3A83%7D%5D%7D%2C%22requestId%22%3A%2217958651-f205-44c7-ad5d-f8af92a6217a%22%7D' \
   --compressed
 ```
 
@@ -239,7 +271,27 @@ $ ./stress -c 1 -n 1 -d -u 'https://page.aliyun.com/delivery/plan/list' \
   -H 'referer: https://cn.aliyun.com/' \
   -H 'accept-language: zh-CN,zh;q=0.9' \
   -H 'cookie: aliyun_choice=CN; JSESSIONID=J8866281-CKCFJ4BUZ7GDO9V89YBW1-KJ3J5V9K-GYUW7; maliyun_temporary_console0=1AbLByOMHeZe3G41KYd5WWZvrM%2BGErkaLcWfBbgveKA9ifboArprPASvFUUfhwHtt44qsDwVqMk8Wkdr1F5LccYk2mPCZJiXb0q%2Bllj5u3SQGQurtyPqnG489y%2FkoA%2FEvOwsXJTvXTFQPK%2BGJD4FJg%3D%3D; cna=L3Q5F8cHDGgCAXL3r8fEZtdU; isg=BFNThsmSCcgX-sUcc5Jo2s2T4tF9COfKYi8g9wVwr3KphHMmjdh3GrHFvPTqJD_C; l=eBaceXLnQGBjstRJBOfwPurza77OSIRAguPzaNbMiT5POw1B5WAlWZbqyNY6C3GVh6lwR37EODnaBeYBc3K-nxvOu9eFfGMmn' \
-  --data-raw 'adPlanQueryParam=%7B%22adZone%22%3A%7B%22positionList%22%3A%5B%7B%22positionId%22%3A83%7D%5D%7D%2C%22requestId%22%3A%2217958651-f205-44c7-ad5d-f8af92a6217a%22%7D'
+  --data-raw 'adPlanQueryParam=%7B%22adZone%22%3A%7B%22positionList%22%3A%5B%7B%22positionId%22%3A83%7D%5D%7D%2C%22requestId%22%3A%2217958651-f205-44c7-ad5d-f8af92a6217a%22%7D' \
+  --compressed
+```
+
+### Docker Use
+
+```
+$ docker pull louisehong/stress
+
+$ docker run --rm   louisehong/stress  -c 1 -n 1 -d -u 'https://page.aliyun.com/delivery/plan/list' \
+  -H 'authority: page.aliyun.com' \
+  -H 'accept: application/json, text/plain, */*' \
+  -H 'content-type: application/x-www-form-urlencoded' \
+  -H 'origin: https://cn.aliyun.com' \
+  -H 'sec-fetch-site: same-site' \
+  -H 'sec-fetch-mode: cors' \
+  -H 'sec-fetch-dest: empty' \
+  -H 'referer: https://cn.aliyun.com/' \
+  -H 'accept-language: zh-CN,zh;q=0.9' \
+  -H 'cookie: aliyun_choice=CN; JSESSIONID=J8866281-CKCFJ4BUZ7GDO9V89YBW1-KJ3J5V9K-GYUW7; maliyun_temporary_console0=1AbLByOMHeZe3G41KYd5WWZvrM%2BGErkaLcWfBbgveKA9ifboArprPASvFUUfhwHtt44qsDwVqMk8Wkdr1F5LccYk2mPCZJiXb0q%2Bllj5u3SQGQurtyPqnG489y%2FkoA%2FEvOwsXJTvXTFQPK%2BGJD4FJg%3D%3D; cna=L3Q5F8cHDGgCAXL3r8fEZtdU; isg=BFNThsmSCcgX-sUcc5Jo2s2T4tF9COfKYi8g9wVwr3KphHMmjdh3GrHFvPTqJD_C; l=eBaceXLnQGBjstRJBOfwPurza77OSIRAguPzaNbMiT5POw1B5WAlWZbqyNY6C3GVh6lwR37EODnaBeYBc3K-nxvOu9eFfGMmn' \
+  --data-raw 'adPlanQueryParam=%7B%22adZone%22%3A%7B%22positionList%22%3A%5B%7B%22positionId%22%3A83%7D%5D%7D%2C%22requestId%22%3A%2217958651-f205-44c7-ad5d-f8af92a6217a%22%7D' \
   --compressed
 ```
 
@@ -248,21 +300,21 @@ $ ./stress -c 1 -n 1 -d -u 'https://page.aliyun.com/delivery/plan/list' \
 ```
 ├── build.sh
 ├── cmd
-│   ├── dispose.go
-│   ├── root.go
-│   └── version.go
+│   ├── dispose.go
+│   ├── root.go
+│   └── version.go
 ├── main.go
 ├── Makefile
 ├── pkg
-│   ├── http_client.go
-│   ├── websocket_client.go
-│   ├── http.go
-│   ├── request.go
-│   ├── statistics.go
-│   ├── var.go
-│   ├── verify_http.go
-│   ├── verify_websocket.go
-│   └── websocket.go
+│   ├── http_client.go
+│   ├── websocket_client.go
+│   ├── http.go
+│   ├── request.go
+│   ├── statistics.go
+│   ├── var.go
+│   ├── verify_http.go
+│   ├── verify_websocket.go
+│   └── websocket.go
 ├── README.md
 └── utils
     ├── curl.txt

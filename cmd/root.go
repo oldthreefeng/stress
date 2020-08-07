@@ -72,6 +72,13 @@ go 实现的压测工具，每个用户用一个协程的方式模拟，最大�
 			Start()
 		}
 	},
+	PreRun: func(cmd *cobra.Command, args []string) {
+		// 没有请求， 也没有curl文件
+		if pkg.RequestUrl == "" && pkg.Path == "" {
+			fmt.Println(VersionStr)
+			os.Exit(-1)
+		}
+	},
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.

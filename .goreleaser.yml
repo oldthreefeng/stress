@@ -18,7 +18,7 @@ builds:
     - openbsd
     - windows
   ldflags:
-  - -s -w -X github.com/oldthreefeng/stress/cmd.version={{.Version}} -X github.com/oldthreefeng/stress/cmd.Build={{.ShortCommit}} -X github.com/oldthreefeng/stress/cmd.BuildTime={{.Date}} -X github.com/oldthreefeng/stress/cmd.builtBy=goreleaser
+  - -s -w -X github.com/oldthreefeng/stress/cmd.version={{.Version}} -X github.com/oldthreefeng/stress/cmd.Build={{.ShortCommit}} -X github.com/oldthreefeng/stress/cmd.BuildTime={{.Date}} -X github.com/oldthreefeng/stress/cmd.BuildBy=goreleaser
 archives:
 - replacements:
     darwin: Darwin
