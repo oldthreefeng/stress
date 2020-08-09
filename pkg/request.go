@@ -18,7 +18,7 @@ const (
 
 	FormTypeHttp      = "http"
 	FormTypeWebSocket = "webSocket"
-	DefaultMethod 	  = "GET"
+	DefaultMethod     = "GET"
 	DefaultVerifyCode = "statusCode"
 	DefaultTimeOut    = 30 * time.Second
 )
@@ -197,15 +197,15 @@ func NewRequest(url string, verify string, timeout time.Duration, debug bool, re
 
 }
 
-func NewDefaultRequest()  *Request {
+func NewDefaultRequest() *Request {
 	return &Request{
-		Url: "http://www.baidu.com",
-		Form: FormTypeHttp,
-		Method: DefaultMethod,
-		Verify: VerifyStr,
+		Url:     "http://www.baidu.com",
+		Form:    FormTypeHttp,
+		Method:  DefaultMethod,
+		Verify:  VerifyStr,
 		Timeout: DefaultTimeOut,
-		Debug: Debug,
-		Body: "",
+		Debug:   Debug,
+		Body:    "",
 	}
 }
 

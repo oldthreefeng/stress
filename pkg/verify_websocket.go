@@ -49,4 +49,3 @@ func WebSocketJson(request *Request, seq string, msg []byte) (code int, isSuccee
 
 	return
 }
-

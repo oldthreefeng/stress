@@ -29,7 +29,7 @@ import (
 )
 
 var (
-	cfgFile string
+	cfgFile     string
 	rootExample = `	
 	# stress curl file to test 
 	stress -f utils/curl.txt
@@ -101,7 +101,7 @@ func init() {
 	rootCmd.PersistentFlags().Uint64VarP(&pkg.Concurrency, "concurrency", "c", 1, "并发数")
 	rootCmd.PersistentFlags().Uint64VarP(&pkg.Number, "number", "n", 1, "单协程的请求数")
 	rootCmd.PersistentFlags().StringVarP(&pkg.RequestUrl, "requestUrl", "u", "", "curl文件路径")
-	rootCmd.PersistentFlags().StringVarP(&pkg.Path, "path", "f","" , "read curl file to build test")
+	rootCmd.PersistentFlags().StringVarP(&pkg.Path, "path", "f", "", "read curl file to build test")
 
 	rootCmd.PersistentFlags().StringVarP(&pkg.VerifyStr, "verify", "v", pkg.DefaultVerifyCode, " verify 验证方法 在server/verify中 http 支持:statusCode、json webSocket支持:json")
 	rootCmd.PersistentFlags().StringVarP(&pkg.Body, "data", "", "", "http post data same with --data-raw")
@@ -147,8 +147,6 @@ func Start() {
 	request.Print()
 	Dispose(pkg.Concurrency, pkg.Number, request)
 }
-
-
 
 func StartCurl() {
 	request := pkg.NewDefaultRequest()

@@ -108,4 +108,3 @@ func webSocketRequest(chanId uint64, ch chan<- *RequestResults, i uint64, reques
 	ch <- requestResults
 
 }
-

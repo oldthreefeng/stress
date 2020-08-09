@@ -9,5 +9,5 @@ var (
 	RequestUrl  string   // 压力测试的Url
 	Header      []string // 自定义头信息传递给服务器
 	Body        string   // HTTP POST 上传的数据
-	Compressed bool
+	Compressed  bool
 )

@@ -64,4 +64,3 @@ func HttpRequest(method, url string, body io.Reader, headers map[string]string, 
 
 	return
 }
-

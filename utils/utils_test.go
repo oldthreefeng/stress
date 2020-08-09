@@ -35,12 +35,12 @@ func TestParseTheFileC(t *testing.T) {
 		wantCurls []*Curl
 		wantErr   bool
 	}{
-		{"test", args{path: "curl.txt"},nil, false},
+		{"test", args{path: "curl.txt"}, nil, false},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			gotCurls, _ := ParseTheFileC(tt.args.path)
-			for _,v := range gotCurls {
+			for _, v := range gotCurls {
 				fmt.Println(v)
 			}
 		})
