@@ -23,7 +23,7 @@ func init() {
 	pkg.RegisterVerifyWebSocket("json", pkg.WebSocketJson)
 }
 
-// 处理函数
+// Dispose is 处理函数
 func Dispose(concurrency, totalNumber uint64, request *pkg.Request) {
 
 	// 设置接收数据缓存

@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-// HTTP 请求
+// HttpRequest is HTTP 请求
 // method 方法 GET POST
 // url 请求的url
 // body 请求的body

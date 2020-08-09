@@ -137,6 +137,7 @@ func initConfig() {
 	}
 }
 
+// Start is for cli url stress
 func Start() {
 	request, err := pkg.NewRequest(pkg.RequestUrl, pkg.VerifyStr, 0, pkg.Debug, pkg.Header, pkg.Body)
 	if err != nil {
@@ -148,6 +149,7 @@ func Start() {
 	Dispose(pkg.Concurrency, pkg.Number, request)
 }
 
+// StartCurl is for curl file
 func StartCurl() {
 	request := pkg.NewDefaultRequest()
 	list := pkg.GetRequestListFromFile(pkg.Path)
@@ -159,6 +161,7 @@ func StartCurl() {
 	Dispose(pkg.Concurrency, pkg.Number, request)
 }
 
+// ReadStdin is read curl file from stdin
 func ReadStdin() error {
 	var b bytes.Buffer
 	_, err := b.ReadFrom(os.Stdin)

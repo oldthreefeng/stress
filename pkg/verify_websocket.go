@@ -7,7 +7,7 @@ import (
 
 /***************************  返回值为json  ********************************/
 
-// 返回数据结构体
+// WebSocketResponseJson is 返回数据结构体
 type WebSocketResponseJson struct {
 	Seq      string `json:"seq"`
 	Cmd      string `json:"cmd"`
@@ -18,7 +18,7 @@ type WebSocketResponseJson struct {
 	} `json:"response"`
 }
 
-// 通过返回的Body 判断
+// WebSocketJson is 通过返回的Body 判断
 // 返回示例: {"seq":"1566276523281-585638","cmd":"heartbeat","response":{"code":200,"codeMsg":"Success","data":null}}
 // code 取body中的返回code
 func WebSocketJson(request *Request, seq string, msg []byte) (code int, isSucceed bool) {

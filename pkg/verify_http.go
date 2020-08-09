@@ -27,7 +27,7 @@ func getZipData(response *http.Response) (body []byte, err error) {
 	return
 }
 
-// 通过Http状态码判断是否请求成功
+// HttpStatusCode is 通过Http状态码判断是否请求成功
 func HttpStatusCode(request *Request, response *http.Response) (code int, isSucceed bool) {
 
 	defer response.Body.Close()
@@ -55,7 +55,7 @@ type ResponseJson struct {
 	Data interface{} `json:"data"`
 }
 
-// 通过返回的Body 判断
+// HttpJson is 通过返回的Body 判断
 // 返回示例: {"code":200,"msg":"Success","data":{}}
 // code 默认将http code作为返回码，http code 为200时 取body中的返回code
 func HttpJson(request *Request, response *http.Response) (code int, isSucceed bool) {
@@ -94,6 +94,7 @@ func HttpJson(request *Request, response *http.Response) (code int, isSucceed bo
 	return
 }
 
+// MallVersion is for mall.youpenglai.com/apis/version
 type MallVersion struct {
 	Status     int    `json:"status"`
 	Result     string `json:"result"`
@@ -103,6 +104,7 @@ type MallVersion struct {
 	Url        string `json:"url"`
 }
 
+// MallVersionJson 通过返回的Body 判断
 func MallVersionJson(request *Request, response *http.Response) (code int, isSucceed bool) {
 	defer response.Body.Close()
 	code = response.StatusCode

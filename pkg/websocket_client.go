@@ -12,6 +12,7 @@ const (
 	connRetry = 3 // 建立连接重试次数
 )
 
+// WebSocketC is client for websocket
 type WebSocketC struct {
 	conn    *websocket.Conn
 	UrlLink string
@@ -19,6 +20,7 @@ type WebSocketC struct {
 	IsSsl   bool
 }
 
+// NewWebSocket is get WebSocketC
 func NewWebSocket(urlLink string) (ws *WebSocketC) {
 	var (
 		isSsl bool
@@ -59,7 +61,7 @@ func (w *WebSocketC) getOrigin() (origin string) {
 	return
 }
 
-// 关闭
+// Close is 关闭
 func (w *WebSocketC) Close() (err error) {
 	if w == nil {
 
@@ -75,6 +77,7 @@ func (w *WebSocketC) Close() (err error) {
 	return
 }
 
+// GetConn is get connection
 func (w *WebSocketC) GetConn() (err error) {
 
 	var (
@@ -101,7 +104,7 @@ func (w *WebSocketC) GetConn() (err error) {
 	return
 }
 
-// 发送数据
+// Write is 发送数据
 func (w *WebSocketC) Write(body []byte) (err error) {
 	if w.conn == nil {
 		err = errors.New("未建立连接")
@@ -119,7 +122,7 @@ func (w *WebSocketC) Write(body []byte) (err error) {
 	return
 }
 
-// 接收数据
+// Read is 接收数据
 func (w *WebSocketC) Read() (msg []byte, err error) {
 	if w.conn == nil {
 		err = errors.New("未建立连接")

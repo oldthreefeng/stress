@@ -12,7 +12,7 @@ var (
 	exportStatisticsTime = 1 * time.Second
 )
 
-// 接收结果并处理
+// ReceivingResults is 接收结果并处理
 // 统计的时间都是纳秒，显示的时间 都是毫秒
 // concurrent 并发数
 func ReceivingResults(concurrent uint64, ch <-chan *RequestResults, wg *sync.WaitGroup) {

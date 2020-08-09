@@ -32,7 +32,7 @@ var (
 	verifyMapWebSocketMutex sync.RWMutex
 )
 
-// 注册http校验函数
+// RegisterVerifyHttp is 注册http校验函数
 func RegisterVerifyHttp(verify string, verifyFunc VerifyHttp) {
 	verifyMapHttpMutex.Lock()
 	defer verifyMapHttpMutex.Unlock()
@@ -41,7 +41,7 @@ func RegisterVerifyHttp(verify string, verifyFunc VerifyHttp) {
 	verifyMapHttp[key] = verifyFunc
 }
 
-// 注册webSocket校验函数
+// RegisterVerifyWebSocket is 注册webSocket校验函数
 func RegisterVerifyWebSocket(verify string, verifyFunc VerifyWebSocket) {
 	verifyMapWebSocketMutex.Lock()
 	defer verifyMapWebSocketMutex.Unlock()
@@ -50,17 +50,18 @@ func RegisterVerifyWebSocket(verify string, verifyFunc VerifyWebSocket) {
 	verifyMapWebSocket[key] = verifyFunc
 }
 
-// 验证器
+// Verify is interface for 验证器
 type Verify interface {
 	GetCode() int    // 有一个方法，返回code为200为成功
 	GetResult() bool // 返回是否成功
 }
 
-// 验证方法
+// VerifyHttp is verify for http 验证方法
 type VerifyHttp func(request *Request, response *http.Response) (code int, isSucceed bool)
+// VerifyWebSocket is verify for websocket
 type VerifyWebSocket func(request *Request, seq string, msg []byte) (code int, isSucceed bool)
 
-// 请求结果
+// Request is a form for http request 请求结果
 type Request struct {
 	Url     string            // Url
 	Form    string            // http/webSocket/tcp
@@ -75,6 +76,7 @@ type Request struct {
 	// 循环事件 切片 时间 动作
 }
 
+// GetBody return io.Reader from request
 func (r *Request) GetBody() (body io.Reader) {
 	body = strings.NewReader(r.Body)
 
@@ -87,7 +89,7 @@ func (r *Request) getVerifyKey() (key string) {
 	return
 }
 
-// 获取数据校验方法
+// GetVerifyHttp is 获取数据校验方法
 func (r *Request) GetVerifyHttp() VerifyHttp {
 	verify, ok := verifyMapHttp[r.getVerifyKey()]
 	if !ok {
@@ -97,6 +99,7 @@ func (r *Request) GetVerifyHttp() VerifyHttp {
 	return verify
 }
 
+// GetVerifyWebSocket is 获取数据校验方法
 func (r *Request) GetVerifyWebSocket() VerifyWebSocket {
 	verify, ok := verifyMapWebSocket[r.getVerifyKey()]
 	if !ok {
@@ -106,13 +109,12 @@ func (r *Request) GetVerifyWebSocket() VerifyWebSocket {
 	return verify
 }
 
-// NewRequest
+// NewRequest is get Request form
 // url 压测的url
 // verify 验证方法 在server/verify中 http 支持:statusCode、json webSocket支持:json
 // timeout 请求超时时间
 // debug 是否开启debug
 // path curl文件路径 http接口压测，自定义参数设置
-
 func NewRequest(url string, verify string, timeout time.Duration, debug bool, reqHeaders []string, reqBody string) (request *Request, err error) {
 
 	var (
@@ -197,6 +199,7 @@ func NewRequest(url string, verify string, timeout time.Duration, debug bool, re
 
 }
 
+// NewDefaultRequest is a default request
 func NewDefaultRequest() *Request {
 	return &Request{
 		Url:     "http://www.baidu.com",
@@ -227,7 +230,7 @@ func getHeaderValue(v string, headers map[string]string) {
 	}
 }
 
-// 打印
+// Print is 打印参数
 func (r *Request) Print() {
 	if r == nil {
 
@@ -242,11 +245,13 @@ func (r *Request) Print() {
 	return
 }
 
+// GetDebug is use Debug mode
 func (r *Request) GetDebug() bool {
 
 	return r.Debug
 }
 
+// IsParameterLegal is verify param is legal
 func (r *Request) IsParameterLegal() (err error) {
 
 	r.Form = "http"
@@ -263,7 +268,7 @@ func (r *Request) IsParameterLegal() (err error) {
 	return
 }
 
-// 请求结果
+// RequestResults is  请求结果
 type RequestResults struct {
 	Id        string // 消息Id
 	ChanId    uint64 // 消息Id
@@ -272,6 +277,7 @@ type RequestResults struct {
 	ErrCode   int    // 错误码
 }
 
+// SetId is set chanId & id to request results
 func (r *RequestResults) SetId(chanId uint64, number uint64) {
 	id := fmt.Sprintf("%d_%d", chanId, number)
 

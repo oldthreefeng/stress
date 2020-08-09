@@ -12,6 +12,7 @@ import (
 	"time"
 )
 
+// Curl store curl file use for go map struct
 type Curl struct {
 	Data map[string][]string
 }
@@ -52,6 +53,7 @@ func ParseTheFile(path string) (curl *Curl, err error) {
 	return NewCurl(string(dataBytes)), nil
 }
 
+// ParseTheFileC is read  multi curl file to Curl struct
 func ParseTheFileC(path string) (curls []*Curl, err error) {
 
 	if path == "" {
@@ -88,6 +90,7 @@ func ParseTheFileC(path string) (curls []*Curl, err error) {
 	return
 }
 
+// NewCurl is read string to Curl
 func NewCurl(data string) (curl *Curl) {
 	curl = &Curl{
 		Data: make(map[string][]string),
@@ -161,7 +164,7 @@ func NewCurl(data string) (curl *Curl) {
 	return
 }
 
-// GetMethod
+// GetMethod is read Method from Curl
 func (c *Curl) GetMethod() (method string) {
 	method = "GET"
 
@@ -187,6 +190,7 @@ func (c *Curl) GetMethod() (method string) {
 	return
 }
 
+// GetHeaders is read Headers from Curl
 func (c *Curl) GetHeaders() (headers map[string]string) {
 	headers = make(map[string]string, 0)
 
@@ -218,7 +222,7 @@ func getHeaderValue(v string, headers map[string]string) {
 	}
 }
 
-// GetHeaders
+// GetHeadersStr is get Header returns string
 func (c *Curl) GetHeadersStr() string {
 	headers := c.GetHeaders()
 	bytes, _ := json.Marshal(&headers)
@@ -226,6 +230,7 @@ func (c *Curl) GetHeadersStr() string {
 	return string(bytes)
 }
 
+// GetBody is get Body from Curl
 func (c *Curl) GetBody() (body string) {
 
 	keys := []string{"--data", "-d", "--data-raw", "--data-binary"}
@@ -242,6 +247,7 @@ func (c *Curl) GetBody() (body string) {
 	return
 }
 
+// GetUrl is get url from Curl
 func (c *Curl) GetUrl() (url string) {
 
 	keys := []string{"curl", "--url"}
@@ -256,6 +262,7 @@ func (c *Curl) GetUrl() (url string) {
 	return
 }
 
+// DiffNano is return start & end time for program
 func DiffNano(startTime time.Time) (diff int64) {
 
 	startTimeStamp := startTime.UnixNano()
@@ -266,6 +273,7 @@ func DiffNano(startTime time.Time) (diff int64) {
 	return
 }
 
+// FileExist return true if file exist
 func FileExist(path string) bool {
 	_, err := os.Stat(path)
 	return err == nil || os.IsExist(err)

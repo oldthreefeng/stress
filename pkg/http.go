@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-// http go link
+// Http is http go link
 func Http(chanId uint64, ch chan<- *RequestResults, totalNumber uint64, wg *sync.WaitGroup, request *Request) {
 
 	defer func() {
@@ -29,7 +29,7 @@ func Http(chanId uint64, ch chan<- *RequestResults, totalNumber uint64, wg *sync
 	return
 }
 
-// 多个接口分步压测
+// sendList 多个接口分步压测
 func sendList(requestList []*Request) (requestResults []*RequestResults) {
 	var (
 		requestTime uint64
@@ -72,12 +72,13 @@ func send(request *Request) (bool, int, uint64) {
 	return isSucceed, errCode, requestTime
 }
 
-// 接口加权压测
+// ReqListWeigh  接口加权压测
 type ReqListWeigh struct {
 	list       []Req
 	weighCount uint32 // 总权重
 }
 
+// Req is weights for request
 type Req struct {
 	req     *Request // 请求信息
 	weights uint32   // 权重，数字越大访问频率越高
@@ -133,7 +134,7 @@ func getRequestList(request *Request, path string) (clients []*Request) {
 	return clients
 }
 
-// 文件路径为空， 则返回 nil
+// GetRequestListFromFile is get request from curl file 文件路径为空， 则返回 nil
 func GetRequestListFromFile(path string) (clients []*Request) {
 	clients = make([]*Request, 0)
 	if path == "" {

@@ -21,7 +21,7 @@ func init() {
 	keepAlive = true
 }
 
-// web socket go link
+// WebSocket is  web socket go link
 func WebSocket(chanId uint64, ch chan<- *RequestResults, totalNumber uint64, wg *sync.WaitGroup, request *Request, ws *WebSocketC) {
 
 	defer func() {
@@ -68,7 +68,7 @@ end:
 	return
 }
 
-// 请求
+// webSocketRequest is 请求
 func webSocketRequest(chanId uint64, ch chan<- *RequestResults, i uint64, request *Request, ws *WebSocketC) {
 
 	var (
