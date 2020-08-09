@@ -58,6 +58,7 @@ type Verify interface {
 
 // VerifyHttp is verify for http 验证方法
 type VerifyHttp func(request *Request, response *http.Response) (code int, isSucceed bool)
+
 // VerifyWebSocket is verify for websocket
 type VerifyWebSocket func(request *Request, seq string, msg []byte) (code int, isSucceed bool)
 
