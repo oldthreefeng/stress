@@ -234,7 +234,7 @@ curl 'https://www.youpenglai.com/v2/sys/server' -H 'User-Agent: Mozilla/5.0 (Win
 
 支持从`stdin`读取`curl`请求. 从`stdin`读取的内容会保存在`/tmp/curl.tmp`
 
-```shell script
+```shell
 $ cat utils/curl.txt  | ./stress -f -
 ```
 
