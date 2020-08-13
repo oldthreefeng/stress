@@ -3,6 +3,7 @@ package pkg
 import (
 	"errors"
 	"fmt"
+	"github.com/orcaman/concurrent-map"
 	"io"
 	"net/http"
 	"strings"
@@ -64,14 +65,14 @@ type VerifyWebSocket func(request *Request, seq string, msg []byte) (code int, i
 
 // Request is a form for http request 请求结果
 type Request struct {
-	Url     string            // Url
-	Form    string            // http/webSocket/tcp
-	Method  string            // 方法 GET/POST/PUT
-	Headers map[string]string // Headers
-	Body    string            // body
-	Verify  string            // 验证的方法
-	Timeout time.Duration     // 请求超时时间
-	Debug   bool              // 是否开启Debug模式
+	Url     string              // Url
+	Form    string              // http/webSocket/tcp
+	Method  string              // 方法 GET/POST/PUT
+	Headers cmap.ConcurrentMap // Headers
+	Body    string              // body
+	Verify  string              // 验证的方法
+	Timeout time.Duration       // 请求超时时间
+	Debug   bool                // 是否开启Debug模式
 
 	// 连接以后初始化事件
 	// 循环事件 切片 时间 动作
@@ -120,15 +121,14 @@ func NewRequest(url string, verify string, timeout time.Duration, debug bool, re
 
 	var (
 		method  = DefaultMethod
-		headers = make(map[string]string)
+		headers = cmap.New()
 		body    string
 	)
 
 	if reqBody != "" {
 		method = "POST"
 		body = reqBody
-
-		headers["Content-Type"] = "application/x-www-form-urlencoded; charset=utf-8"
+		headers.Set("Content-Type","application/x-www-form-urlencoded; charset=utf-8")
 	}
 
 	for _, v := range reqHeaders {
@@ -213,7 +213,7 @@ func NewDefaultRequest() *Request {
 	}
 }
 
-func getHeaderValue(v string, headers map[string]string) {
+func getHeaderValue(v string, headers cmap.ConcurrentMap) {
 	index := strings.Index(v, ":")
 	if index < 0 {
 		return
@@ -223,11 +223,12 @@ func getHeaderValue(v string, headers map[string]string) {
 	if len(v) >= vIndex {
 		value := strings.TrimPrefix(v[vIndex:], " ")
 
-		if _, ok := headers[v[:index]]; ok {
-			headers[v[:index]] = fmt.Sprintf("%s; %s", headers[v[:index]], value)
+		if val, ok := headers.Get(v[:index]); ok {
+			headers.Set(v[:index], fmt.Sprintf("%s; %s", val, value))
 		} else {
-			headers[v[:index]] = value
+			headers.Set(v[:index], value)
 		}
+
 	}
 }
 
@@ -238,7 +239,7 @@ func (r *Request) Print() {
 		return
 	}
 
-	result := fmt.Sprintf("request:\n form:%s \n url:%s \n method:%s \n headers:%v \n", r.Form, r.Url, r.Method, r.Headers)
+	result := fmt.Sprintf("request:\n form:%s \n url:%s \n method:%s \n headers:%v \n", r.Form, r.Url, r.Method, r.Headers.Items())
 	result = fmt.Sprintf("%s data:%v \n", result, r.Body)
 	result = fmt.Sprintf("%s verify:%s \n timeout:%s \n debug:%v \n", result, r.Verify, r.Timeout, r.Debug)
 	fmt.Println(result)

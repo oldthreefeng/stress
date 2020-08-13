@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	cmap "github.com/orcaman/concurrent-map"
 	"io"
 	"io/ioutil"
 	"os"
@@ -191,8 +192,7 @@ func (c *Curl) GetMethod() (method string) {
 }
 
 // GetHeaders is read Headers from Curl
-func (c *Curl) GetHeaders() (headers map[string]string) {
-	headers = make(map[string]string, 0)
+func (c *Curl) GetHeaders() (headers cmap.ConcurrentMap) {
 
 	keys := []string{"-H", "--header"}
 	value := c.getDataValue(keys)
@@ -204,7 +204,7 @@ func (c *Curl) GetHeaders() (headers map[string]string) {
 	return
 }
 
-func getHeaderValue(v string, headers map[string]string) {
+func getHeaderValue(v string, headers cmap.ConcurrentMap) {
 	index := strings.Index(v, ":")
 	if index < 0 {
 		return
@@ -214,18 +214,20 @@ func getHeaderValue(v string, headers map[string]string) {
 	if len(v) >= vIndex {
 		value := strings.TrimPrefix(v[vIndex:], " ")
 
-		if _, ok := headers[v[:index]]; ok {
-			headers[v[:index]] = fmt.Sprintf("%s; %s", headers[v[:index]], value)
+		if val, ok := headers.Get(v[:index]); ok {
+			headers.Set(v[:index], fmt.Sprintf("%s; %s", val, value))
 		} else {
-			headers[v[:index]] = value
+			headers.Set(v[:index], value)
 		}
+
 	}
 }
 
 // GetHeadersStr is get Header returns string
 func (c *Curl) GetHeadersStr() string {
 	headers := c.GetHeaders()
-	bytes, _ := json.Marshal(&headers)
+	header := headers.Items()
+	bytes, _ := json.Marshal(&header)
 
 	return string(bytes)
 }
