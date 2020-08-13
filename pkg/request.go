@@ -3,7 +3,7 @@ package pkg
 import (
 	"errors"
 	"fmt"
-	"github.com/orcaman/concurrent-map"
+	"github.com/oldthreefeng/stress/utils"
 	"io"
 	"net/http"
 	"strings"
@@ -68,7 +68,7 @@ type Request struct {
 	Url     string              // Url
 	Form    string              // http/webSocket/tcp
 	Method  string              // 方法 GET/POST/PUT
-	Headers cmap.ConcurrentMap // Headers
+	Headers utils.ConcurrentMap // Headers
 	Body    string              // body
 	Verify  string              // 验证的方法
 	Timeout time.Duration       // 请求超时时间
@@ -121,7 +121,7 @@ func NewRequest(url string, verify string, timeout time.Duration, debug bool, re
 
 	var (
 		method  = DefaultMethod
-		headers = cmap.New()
+		headers = utils.New()
 		body    string
 	)
 
@@ -213,7 +213,7 @@ func NewDefaultRequest() *Request {
 	}
 }
 
-func getHeaderValue(v string, headers cmap.ConcurrentMap) {
+func getHeaderValue(v string, headers utils.ConcurrentMap) {
 	index := strings.Index(v, ":")
 	if index < 0 {
 		return
@@ -273,14 +273,14 @@ func (r *Request) IsParameterLegal() (err error) {
 // RequestResults is  请求结果
 type RequestResults struct {
 	Id        string // 消息Id
-	ChanId    uint64 // 消息Id
+	ChanId    int // 消息Id
 	Time      uint64 // 请求时间 纳秒
 	IsSucceed bool   // 是否请求成功
 	ErrCode   int    // 错误码
 }
 
 // SetId is set chanId & id to request results
-func (r *RequestResults) SetId(chanId uint64, number uint64) {
+func (r *RequestResults) SetId(chanId int, number uint64) {
 	id := fmt.Sprintf("%d_%d", chanId, number)
 
 	r.Id = id

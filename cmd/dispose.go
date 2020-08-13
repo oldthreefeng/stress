@@ -24,7 +24,7 @@ func init() {
 }
 
 // Dispose is 处理函数
-func Dispose(concurrency, totalNumber uint64, request *pkg.Request) {
+func Dispose(concurrency int, totalNumber uint64, request *pkg.Request) {
 
 	// 设置接收数据缓存
 	ch := make(chan *pkg.RequestResults, 1000)
@@ -36,7 +36,7 @@ func Dispose(concurrency, totalNumber uint64, request *pkg.Request) {
 	wgReceiving.Add(1)
 	go pkg.ReceivingResults(concurrency, ch, &wgReceiving)
 
-	for i := uint64(0); i < concurrency; i++ {
+	for i := 0; i < concurrency; i++ {
 		wg.Add(1)
 		switch request.Form {
 		case pkg.FormTypeHttp:
@@ -59,7 +59,7 @@ func Dispose(concurrency, totalNumber uint64, request *pkg.Request) {
 				go pkg.WebSocket(i, ch, totalNumber, &wg, request, ws)
 			case 2:
 				// 并发建立长链接
-				go func(i uint64) {
+				go func(i int) {
 					// 连接以后再启动协程
 					ws := pkg.NewWebSocket(request.Url)
 					err := ws.GetConn()

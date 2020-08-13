@@ -98,7 +98,7 @@ func init() {
 	// will be global for your application.
 
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file for stress (default is $HOME/.stress.yaml)")
-	rootCmd.PersistentFlags().Uint64VarP(&pkg.Concurrency, "concurrency", "c", 1, "并发数")
+	rootCmd.PersistentFlags().IntVarP(&pkg.Concurrency, "concurrency", "c", 1, "并发数")
 	rootCmd.PersistentFlags().Uint64VarP(&pkg.Number, "number", "n", 1, "单协程的请求数")
 	rootCmd.PersistentFlags().StringVarP(&pkg.RequestUrl, "requestUrl", "u", "", "curl文件路径")
 	rootCmd.PersistentFlags().StringVarP(&pkg.Path, "path", "f", "", "read curl file to build test")

@@ -8,7 +8,7 @@ import (
 )
 
 // Http is http go link
-func Http(chanId uint64, ch chan<- *RequestResults, totalNumber uint64, wg *sync.WaitGroup, request *Request) {
+func Http(chanId int, ch chan<- *RequestResults, totalNumber uint64, wg *sync.WaitGroup, request *Request) {
 
 	defer func() {
 		wg.Done()

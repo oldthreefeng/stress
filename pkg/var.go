@@ -1,7 +1,7 @@
 package pkg
 
 var (
-	Concurrency uint64   // Concurrency is 并发请求数
+	Concurrency int   // Concurrency is 并发请求数
 	Number      uint64   // Number is 单个协程的请求总数
 	Debug       bool     // Debug is 是否开其调试模式
 	Path        string   // Path is curl 文件路径

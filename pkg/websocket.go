@@ -22,7 +22,7 @@ func init() {
 }
 
 // WebSocket is  web socket go link
-func WebSocket(chanId uint64, ch chan<- *RequestResults, totalNumber uint64, wg *sync.WaitGroup, request *Request, ws *WebSocketC) {
+func WebSocket(chanId int, ch chan<- *RequestResults, totalNumber uint64, wg *sync.WaitGroup, request *Request, ws *WebSocketC) {
 
 	defer func() {
 		wg.Done()
@@ -69,7 +69,7 @@ end:
 }
 
 // webSocketRequest is 请求
-func webSocketRequest(chanId uint64, ch chan<- *RequestResults, i uint64, request *Request, ws *WebSocketC) {
+func webSocketRequest(chanId int, ch chan<- *RequestResults, i uint64, request *Request, ws *WebSocketC) {
 
 	var (
 		startTime = time.Now()

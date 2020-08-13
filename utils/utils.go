@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	cmap "github.com/orcaman/concurrent-map"
 	"io"
 	"io/ioutil"
 	"os"
@@ -192,7 +191,7 @@ func (c *Curl) GetMethod() (method string) {
 }
 
 // GetHeaders is read Headers from Curl
-func (c *Curl) GetHeaders() (headers cmap.ConcurrentMap) {
+func (c *Curl) GetHeaders() (headers ConcurrentMap) {
 
 	keys := []string{"-H", "--header"}
 	value := c.getDataValue(keys)
@@ -204,7 +203,7 @@ func (c *Curl) GetHeaders() (headers cmap.ConcurrentMap) {
 	return
 }
 
-func getHeaderValue(v string, headers cmap.ConcurrentMap) {
+func getHeaderValue(v string, headers ConcurrentMap) {
 	index := strings.Index(v, ":")
 	if index < 0 {
 		return

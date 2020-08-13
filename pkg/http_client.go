@@ -4,7 +4,6 @@ import (
 	"crypto/tls"
 	"fmt"
 	"github.com/oldthreefeng/stress/utils"
-	"github.com/orcaman/concurrent-map"
 	"io"
 	"net/http"
 	"time"
@@ -16,7 +15,7 @@ import (
 // body 请求的body
 // headers 请求头信息
 // timeout 请求超时时间
-func HttpRequest(method, url string, body io.Reader, headers cmap.ConcurrentMap, timeout time.Duration) (resp *http.Response, requestTime uint64, err error) {
+func HttpRequest(method, url string, body io.Reader, headers utils.ConcurrentMap, timeout time.Duration) (resp *http.Response, requestTime uint64, err error) {
 
 	// 跳过证书验证
 	tr := &http.Transport{
@@ -43,7 +42,7 @@ func HttpRequest(method, url string, body io.Reader, headers cmap.ConcurrentMap,
 
 	if _, ok := headers.Get("Content-Type"); !ok {
 		if headers == nil {
-			headers = cmap.New()
+			headers = utils.New()
 		}
 		headers.Set("Content-Type","application/x-www-form-urlencoded; charset=utf-8")
 	}
