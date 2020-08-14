@@ -106,7 +106,7 @@ func init() {
 	rootCmd.PersistentFlags().StringVarP(&pkg.VerifyStr, "verify", "v", pkg.DefaultVerifyCode, " verify 验证方法 在server/verify中 http 支持:statusCode、json webSocket支持:json")
 	rootCmd.PersistentFlags().StringVarP(&pkg.Body, "data", "", "", "http post data same with --data-raw")
 	rootCmd.PersistentFlags().StringVarP(&pkg.Body, "data-raw", "", "", "http post data same with --data")
-	rootCmd.PersistentFlags().StringSliceVarP(&pkg.Header, "header", "H", []string{}, "http post data")
+	rootCmd.PersistentFlags().StringSliceVarP(&pkg.Header, "header", "H", []string{}, "http headers")
 	rootCmd.PersistentFlags().BoolVarP(&pkg.Debug, "debug", "d", false, "debug 模式")
 	rootCmd.PersistentFlags().BoolVarP(&pkg.Compressed, "compressed", "", false, "使用gzip压缩算法去请求 。同curl --compressed gzip")
 }
