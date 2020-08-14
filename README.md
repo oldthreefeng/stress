@@ -193,7 +193,7 @@ Flags:
       --config string       config file for stress (default is $HOME/.stress.yaml)
       --data string         http post data
   -d, --debug               debug 模式
-  -H, --header strings      http post data
+  -H, --header strings      http headers
   -h, --help                help for stress
   -n, --number uint         单协程的请求数 (default 1)
   -f, --path string         read curl file to build test
