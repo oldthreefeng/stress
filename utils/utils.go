@@ -192,7 +192,7 @@ func (c *Curl) GetMethod() (method string) {
 
 // GetHeaders is read Headers from Curl
 func (c *Curl) GetHeaders() (headers ConcurrentMap) {
-
+	headers = New(32)
 	keys := []string{"-H", "--header"}
 	value := c.getDataValue(keys)
 

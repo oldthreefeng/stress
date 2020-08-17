@@ -4,7 +4,6 @@ go 1.14
 
 require (
 	github.com/mitchellh/go-homedir v1.1.0
-	github.com/orcaman/concurrent-map v0.0.0-20190826125027-8c72a8bb44f6
 	github.com/spf13/cobra v1.0.0
 	github.com/spf13/viper v1.7.1
 	golang.org/x/net v0.0.0-20190620200207-3b0461eec859

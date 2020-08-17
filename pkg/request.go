@@ -121,7 +121,7 @@ func NewRequest(url string, verify string, timeout time.Duration, debug bool, re
 
 	var (
 		method  = DefaultMethod
-		headers = utils.New()
+		headers = utils.New(Concurrency)
 		body    string
 	)
 

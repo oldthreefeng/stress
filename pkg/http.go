@@ -145,6 +145,7 @@ func GetRequestListFromFile(path string) (clients []*Request) {
 		return
 	}
 	for _, v := range curls {
+
 		clients = append(clients, &Request{
 			Url:     v.GetUrl(),
 			Method:  v.GetMethod(),

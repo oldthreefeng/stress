@@ -41,7 +41,7 @@ func ReceivingResults(concurrent int, ch <-chan *RequestResults, wg *sync.WaitGr
 	statTime := uint64(time.Now().UnixNano())
 
 	// 错误码/错误个数
-	var errCode = utils.New()
+	var errCode = utils.New(Concurrency)
 
 	// 定时输出一次计算结果
 	ticker := time.NewTicker(exportStatisticsTime)

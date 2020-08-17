@@ -42,7 +42,7 @@ func HttpRequest(method, url string, body io.Reader, headers utils.ConcurrentMap
 
 	if _, ok := headers.Get("Content-Type"); !ok {
 		if headers == nil {
-			headers = utils.New()
+			headers = utils.New(Concurrency)
 		}
 		headers.Set("Content-Type","application/x-www-form-urlencoded; charset=utf-8")
 	}
