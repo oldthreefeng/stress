@@ -23,6 +23,34 @@ func init() {
 	pkg.RegisterVerifyWebSocket("json", pkg.WebSocketJson)
 }
 
+// DisposeMultiLine 处理行数多余100
+func DisposeMultiLine(totalNumber uint64, requests []*pkg.Request) {
+	ch := make(chan *pkg.RequestResults, 1000)
+	var (
+		wg          sync.WaitGroup // 发送数据完成
+		wgReceiving sync.WaitGroup // 数据处理完成
+	)
+
+	wgReceiving.Add(1)
+	go pkg.ReceivingResults(len(requests), ch, &wgReceiving)
+
+	for k, v := range requests {
+		wg.Add(1)
+		go pkg.HttpMulti(k, ch, totalNumber, &wg, v)
+		time.Sleep(5000 * time.Nanosecond)
+	}
+	// 等待所有的数据都发送完成
+	wg.Wait()
+
+	// 延时1毫秒 确保数据都处理完成了
+	time.Sleep(1 * time.Millisecond)
+	close(ch)
+
+	// 数据全部处理完成了
+	wgReceiving.Wait()
+	return
+}
+
 // Dispose is 处理函数
 func Dispose(concurrency int, totalNumber uint64, request *pkg.Request) {
 

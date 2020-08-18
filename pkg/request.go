@@ -286,3 +286,29 @@ func (r *RequestResults) SetId(chanId int, number uint64) {
 	r.Id = id
 	r.ChanId = chanId
 }
+
+
+func GetRequestListFromFile(path string) (clients []*Request) {
+	clients = make([]*Request, 0)
+	if path == "" {
+		return
+	}
+	curls, err := utils.ParseTheFileC(path)
+	if err != nil {
+		return
+	}
+	for _, v := range curls {
+
+		clients = append(clients, &Request{
+			Url:     v.GetUrl(),
+			Method:  v.GetMethod(),
+			Headers: v.GetHeaders(),
+			Body:    v.GetBody(),
+			Timeout: 30 * time.Second,
+			Verify:  VerifyStr,
+			Debug:   Debug,
+			Form:    FormTypeHttp,
+		})
+	}
+	return
+}

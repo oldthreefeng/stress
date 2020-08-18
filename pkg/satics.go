@@ -93,7 +93,7 @@ func ReceivingResults(concurrent int, ch <-chan *RequestResults, wg *sync.WaitGr
 		strChanId := fmt.Sprintf("%d", data.ChanId)
 		if _, ok := chanIds.Get(strChanId); !ok {
 			chanIds.Set(strChanId, true)
-			chanIdLen = chanIds.Count()
+			chanIdLen = len(chanIds.Items())
 		}
 
 	}

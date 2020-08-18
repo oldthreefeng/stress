@@ -1,10 +1,8 @@
 package pkg
 
 import (
-	"github.com/oldthreefeng/stress/utils"
 	"math/rand"
 	"sync"
-	"time"
 )
 
 // Http is http go link
@@ -26,6 +24,27 @@ func Http(chanId int, ch chan<- *RequestResults, totalNumber uint64, wg *sync.Wa
 		}
 	}
 
+	return
+}
+
+// HttpMulti is 处理行数大于100的逻辑。
+func HttpMulti(chanId int, ch chan<- *RequestResults, totalNumber uint64, wg *sync.WaitGroup, request *Request) {
+
+	defer func() {
+		wg.Done()
+	}()
+
+	for i := uint64(0); i < totalNumber; i++ {
+		isSucceed, errCode, requestTime := send(request)
+
+		result := &RequestResults{
+			Time:      requestTime,
+			ErrCode:   errCode,
+			IsSucceed: isSucceed,
+		}
+		result.SetId(chanId, i)
+		ch <- result
+	}
 	return
 }
 
@@ -57,10 +76,7 @@ func send(request *Request) (bool, int, uint64) {
 		isSucceed = false
 		errCode   = HttpOk
 	)
-
 	newRequest := getRequest(request)
-	// newRequest := request
-
 	resp, requestTime, err := HttpRequest(newRequest.Method, newRequest.Url, newRequest.GetBody(), newRequest.Headers, newRequest.Timeout)
 	// requestTime := uint64(utils.DiffNano(startTime))
 	if err != nil {
@@ -132,30 +148,4 @@ func getRequestList(request *Request, path string) (clients []*Request) {
 	}
 
 	return clients
-}
-
-// GetRequestListFromFile is get request from curl file 文件路径为空， 则返回 nil
-func GetRequestListFromFile(path string) (clients []*Request) {
-	clients = make([]*Request, 0)
-	if path == "" {
-		return
-	}
-	curls, err := utils.ParseTheFileC(path)
-	if err != nil {
-		return
-	}
-	for _, v := range curls {
-
-		clients = append(clients, &Request{
-			Url:     v.GetUrl(),
-			Method:  v.GetMethod(),
-			Headers: v.GetHeaders(),
-			Body:    v.GetBody(),
-			Timeout: 30 * time.Second,
-			Verify:  VerifyStr,
-			Debug:   Debug,
-			Form:    FormTypeHttp,
-		})
-	}
-	return
 }

@@ -151,14 +151,20 @@ func Start() {
 
 // StartCurl is for curl file
 func StartCurl() {
-	request := pkg.NewDefaultRequest()
+	//request := pkg.NewDefaultRequest()
 	list := pkg.GetRequestListFromFile(pkg.Path)
 	fmt.Printf("\n 开始启动  并发数:%d 请求数:%d 请求参数: \n", pkg.Concurrency, pkg.Number)
-	for k, v := range list {
-		fmt.Printf("%d step: \n", k)
-		v.Print()
+	//for k, v := range list {
+	//	fmt.Printf("%d step: \n", k)
+	//	v.Print()
+	//}
+	// when curl in file more then 100,  Concurrency is len(list), default is to slow.
+	if len(list) > 100 {
+		DisposeMultiLine(pkg.Number, list)
+	} else {
+		request := pkg.NewDefaultRequest()
+		Dispose(pkg.Concurrency, pkg.Number, request)
 	}
-	Dispose(pkg.Concurrency, pkg.Number, request)
 }
 
 // ReadStdin is read curl file from stdin
