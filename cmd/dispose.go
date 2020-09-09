@@ -23,7 +23,7 @@ func init() {
 	pkg.RegisterVerifyWebSocket("json", pkg.WebSocketJson)
 }
 
-// DisposeMultiLine 处理行数多余100
+// DisposeMultiLine 处理行数多于100
 func DisposeMultiLine(totalNumber uint64, requests []*pkg.Request) {
 	ch := make(chan *pkg.RequestResults, 1000)
 	var (

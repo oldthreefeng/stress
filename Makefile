@@ -49,6 +49,7 @@ Asset:
 $(PLATFORMS): Asset deps
 	@echo "编译" $@
 	GOOS=$@ GOARCH=amd64 CGO_ENABLED=0 GO111MODULE=on GOPROXY=https://goproxy.cn $(GOBUILD) -ldflags '$(LDFLAGS)'  -o $(NAME) $(SRCFILE)
+	upx $(NAME)
 	cp -f $(NAME) $(DIRNAME)
 	tar czvf $(BUILDDIR)/$(SOFTWARENAME)-$@-amd64.tar.gz $(DIRNAME)
 

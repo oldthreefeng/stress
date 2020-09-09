@@ -98,17 +98,17 @@ func init() {
 	// will be global for your application.
 
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file for stress (default is $HOME/.stress.yaml)")
-	rootCmd.PersistentFlags().IntVarP(&pkg.Concurrency, "concurrency", "c", 1, "并发数")
-	rootCmd.PersistentFlags().Uint64VarP(&pkg.Number, "number", "n", 1, "单协程的请求数")
-	rootCmd.PersistentFlags().StringVarP(&pkg.RequestUrl, "requestUrl", "u", "", "curl文件路径")
-	rootCmd.PersistentFlags().StringVarP(&pkg.Path, "path", "f", "", "read curl file to build test")
+	rootCmd.PersistentFlags().IntVarP(&pkg.Concurrency, "concurrency", "c", 1, "numbers of goroutine")
+	rootCmd.PersistentFlags().Uint64VarP(&pkg.Number, "number", "n", 1, "numbers of on goroutine requests")
+	rootCmd.PersistentFlags().StringVarP(&pkg.RequestUrl, "requestUrl", "u", "", "request url like https://www.baidu.com")
+	rootCmd.PersistentFlags().StringVarP(&pkg.Path, "path", "f", "", "curl file path")
 
-	rootCmd.PersistentFlags().StringVarP(&pkg.VerifyStr, "verify", "v", pkg.DefaultVerifyCode, " verify 验证方法 在server/verify中 http 支持:statusCode、json webSocket支持:json")
+	rootCmd.PersistentFlags().StringVarP(&pkg.VerifyStr, "verify", "v", pkg.DefaultVerifyCode, "verify http support :statusCod/json, webSocket support:json")
 	rootCmd.PersistentFlags().StringVarP(&pkg.Body, "data", "", "", "http post data same with --data-raw")
 	rootCmd.PersistentFlags().StringVarP(&pkg.Body, "data-raw", "", "", "http post data same with --data")
 	rootCmd.PersistentFlags().StringSliceVarP(&pkg.Header, "header", "H", []string{}, "http headers")
 	rootCmd.PersistentFlags().BoolVarP(&pkg.Debug, "debug", "d", false, "debug 模式")
-	rootCmd.PersistentFlags().BoolVarP(&pkg.Compressed, "compressed", "", false, "使用gzip压缩算法去请求 。同curl --compressed gzip")
+	rootCmd.PersistentFlags().BoolVarP(&pkg.Compressed, "compressed", "", false, "use gzip to get request .ex curl --compressed gzip")
 }
 
 // initConfig reads in config file and ENV variables if set.
