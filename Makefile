@@ -58,6 +58,7 @@ clean:
 	-rm -rf $(NAME)
 	-rm -rf $(BUILDDIR)
 
+# make push  m="add completion"
 .PHONY: push
 push: clean
 	git add .
