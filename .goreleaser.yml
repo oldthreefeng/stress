@@ -19,13 +19,13 @@ builds:
     - windows
   ldflags:
   - -s -w -X github.com/oldthreefeng/stress/cmd.Version={{.Tag}} -X github.com/oldthreefeng/stress/cmd.Build={{.ShortCommit}} -X github.com/oldthreefeng/stress/cmd.BuildTime={{.Date}} -X github.com/oldthreefeng/stress/cmd.BuildBy=goreleaser
-archives:
-- replacements:
-    darwin: Darwin
-    linux: Linux
-    windows: Windows
-    386: i386
-    amd64: x86_64
+#archives:
+#- replacements:
+#    darwin: Darwin
+#    linux: Linux
+#    windows: Windows
+#    386: i386
+#    amd64: x86_64
 checksum:
   name_template: 'checksums.txt'
 snapshot:
@@ -37,17 +37,17 @@ changelog:
     - '^docs:'
     - '^test:'
 
-dockers:
-  -
-    goos: linux
-
-    goarch: amd64
-
-    binaries:
-      - stress
-
-    image_templates:
-      - "louisehong/{{.ProjectName}}:latest"
-      - "louisehong/{{.ProjectName}}:{{.Tag}}"
-
-    dockerfile: Dockerfile
+#dockers:
+#  -
+#    goos: linux
+#
+#    goarch: amd64
+#
+#    binaries:
+#      - stress
+#
+#    image_templates:
+#      - "louisehong/{{.ProjectName}}:latest"
+#      - "louisehong/{{.ProjectName}}:{{.Tag}}"
+#
+#    dockerfile: Dockerfile
