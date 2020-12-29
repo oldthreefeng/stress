@@ -70,7 +70,7 @@ jobs:
           DOCKER_REPO: ${{ secrets.DOCKER_REPO }}
         run: |
           docker buildx build \
-            --platform linux/amd64,linux/arm64 \
+            --platform linux/amd64,linux/arm64,linux/arm/v7 \
             --build-arg VERSION=${{ steps.prepare.outputs.tag_name }} \
             --push \
             -t ${DOCKER_REPO:-louisehong/stress}:${{ steps.prepare.outputs.tag_name }} \

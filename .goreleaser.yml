@@ -17,6 +17,12 @@ builds:
     - linux
     - openbsd
     - windows
+  goarch:
+    - amd64
+    - arm64
+    - arm
+  goarm:
+    - 7
   ldflags:
   - -s -w -X github.com/oldthreefeng/stress/cmd.Version={{.Tag}} -X github.com/oldthreefeng/stress/cmd.Build={{.ShortCommit}} -X github.com/oldthreefeng/stress/cmd.BuildTime={{.Date}} -X github.com/oldthreefeng/stress/cmd.BuildBy=goreleaser
 #archives:
