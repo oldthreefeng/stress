@@ -41,7 +41,7 @@ jobs:
           version: latest
           args: release --timeout=1h  --release-notes=README.md
         env:
-#          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
           VERSION: ${{ steps.prepare.outputs.tag_name }}
 
 #      - name: Build binareies to oss
